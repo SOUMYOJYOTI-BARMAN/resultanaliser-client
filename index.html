@@ -186,7 +186,7 @@
           ? $("#selectServer_div").show()
           : $("#selectServer_div").hide();
         $("#Result_view").hide();
-        $("#resultAnalyzerForm").on("submit", function (e) {
+        $("#resultAnalyzerForm").on("submit", async function (e) {
           e.preventDefault();
           var ans_key_url = $("#inputAnskeyLink").val();
           var selectServer = isLocalhost
@@ -202,7 +202,9 @@
           }
 
           $("#btnAnskeyLinkSubmit").attr("disabled", true);
-          fetch(`${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`) //https://netlifyproxysb.netlify.app
+          await fetch(
+            `${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`
+          ) //https://netlifyproxysb.netlify.app
             .then((response) => response.json())
             .then((data) => {
               console.log(data);
@@ -223,7 +225,8 @@
               $("#btnAnskeyLinkSubmit").attr("disabled", false);
               console.log(error);
             });
-          fetch(ans_key_url)
+          console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+          await fetch(ans_key_url)
             .then((response) => {
               if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
