@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ResultAnalizer</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="resultAnalyzerContainer" class="container shadow p-5">
+      <h1 class="text-center">Result Analyser</h1>
+      <form id="resultAnalyzerForm">
+        <div class="mb-3">
+          <label for="inputAnskeyLink" class="form-label"
+            >Enter your Answer key URL</label
+          >
+          <div class="input-group">
+            <span class="input-group-text" id="basic-addon3"
+              ><i class="bi bi-link-45deg"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control"
+              id="inputAnskeyLink"
+              name="AnskeyLink"
+              aria-describedby="basic-addon3 basic-addon4"
+              value="https://rrb.digialm.com///per/g22/pub/2667/touchstone/AssessmentQPHTMLMode1//2667O248/2667O248S1D2414/17347860496592268/222242230410595_2667O248S1D2414E1.html"
+              required
+            />
+          </div>
+        </div>
+        <button
+          class="btn btn-outline-success"
+          type="submit"
+          id="btnAnskeyLinkSubmit"
+        >
+          Submit
+        </button>
+      </form>
+      <div class="row" id="selectServer_div">
+        <div class="col">
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            id="selectServer"
+          >
+            <option selected>server url</option>
+            <option value="https://netlifyproxysb.netlify.app">Netlify</option>
+            <option value="http://localhost:8888">Local</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="Result_view" class="container shadow p-5 mt-3 mb-3">
+      <h3 class="text-center">Detailed Analysis</h3>
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Section</th>
+            <th scope="col">Total Questions</th>
+            <th scope="col">Correct</th>
+            <th scope="col">Wrong</th>
+            <th scope="col">Not Attempt</th>
+            <th scope="col">
+              Total Marks<br />
+              <i
+                ><span class="text-danger">(+1)</span>
+                <span class="text-success">(-0.33)</span></i
+              >
+            </th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <!-- <tr>
+                    <td>Section 1</td>
+                    <td>10</td>
+                    <td>5</td>
+                    <td>0</td>
+                    <td>15</td>
+                    <td>15</td>
+                </tr> -->
+        </tbody>
+        <tfoot></tfoot>
+      </table>
+      <div
+        class=""
+        style="
+          display: flex;
+          align-content: center;
+          justify-content: space-evenly;
+          align-items: stretch;
+        "
+      >
+        <h4>Click to view all correct/worng/unattempted questions :</h4>
+        <button
+          type="button"
+          class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+          data-bs-whatever="correct"
+        >
+          Correct
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+          data-bs-whatever="wrong"
+        >
+          Wrong
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+          data-bs-whatever="not_attempt"
+        >
+          Not Attempt
+        </button>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" style="display: grid"></div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="ans_key_view" class="container-fluid"></div>
+    <div id="content"></div>
+    <script type="text/javascript">
+      $(document).ready(() => {
+        const isLocalhost = Boolean(
+          window.location.hostname === "localhost" ||
+            // [::1] is the IPv6 localhost address.
+            window.location.hostname === "[::1]" ||
+            // 127.0.0.1/8 is considered localhost for IPv4.
+            window.location.hostname.match(
+              /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+            )
+        );
+        isLocalhost
+          ? $("#selectServer_div").show()
+          : $("#selectServer_div").hide();
+        $("#Result_view").hide();
+        $("#resultAnalyzerForm").on("submit", function (e) {
+          e.preventDefault();
+          var ans_key_url = $("#inputAnskeyLink").val();
+          var selectServer = isLocalhost
+            ? $("#selectServer").find(":selected").val()
+            : "https://netlifyproxysb.netlify.app";
+          ans_key_url = ans_key_url.split(".html"); // from submitting single ansswer key url
+          ans_key_url = ans_key_url[0] + ".html";
+          //console.log(ans_key_url);
+          var BoardDomain = ans_key_url.split("/per")[0];
+          if (ans_key_url.trim() == "") {
+            alert("Please enter answer key url!");
+            return;
+          }
+
+          $("#btnAnskeyLinkSubmit").attr("disabled", true);
+          fetch(`${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`) //https://netlifyproxysb.netlify.app
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              $("#btnAnskeyLinkSubmit").attr("disabled", false);
+              //console.log(response);
+              //keydataresponse = response; // JSON.parse(response);
+              $("#btnAnskeyLinkSubmit").val("Submit");
+              //console.log(keydataresponse);
+              if (data.ressts.trim() == "data-received") {
+                analize_data(BoardDomain, data.resdata);
+              } else {
+                console.log(data.ressts);
+                $("#btnAnskeyLinkSubmit").val("Try Again!");
+              }
+            })
+            .catch((error) => {
+              $("#btnAnskeyLinkSubmit").val("Try Again! 😕");
+              $("#btnAnskeyLinkSubmit").attr("disabled", false);
+              console.log(error);
+            });
+          fetch(ans_key_url)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              console.log(response);
+              return response.text();
+            })
+            .then((html) => {
+              document.getElementById("content").innerHTML = html;
+            })
+            .catch((error) => {
+              console.log(error);
+              document.getElementById(
+                "content"
+              ).textContent = `Error: ${error.message}`;
+            });
+          /*$.ajax({
+                  type: "GET",
+                  url: `https://netlifyproxysb.netlify.app/proxy?url=${encodeURIComponent(
+                    ans_key_url
+                  )}`, //"https://resultanalizer.netlify.app/.netlify/functions/api/fetch-page", //"http://localhost:3001/fetch-page",
+                  data: {}, //ans_key_url: ans_key_url
+                  async: true,
+                  cache: false,
+                  /*headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+                  },*/
+          /*beforeSend: function () {
+                    $("#btnAnskeyLinkSubmit").val("getting data...");
+                  },
+                  success: function (response) {
+                    $("#btnAnskeyLinkSubmit").attr("disabled", false);
+                    //console.log(response);
+                    //keydataresponse = response; // JSON.parse(response);
+                    $("#btnAnskeyLinkSubmit").val("Submit");
+                    //console.log(keydataresponse);
+                    if (response.ressts.trim() == "data-received") {
+                      analize_data(BoardDomain, response.resdata);
+                    } else {
+                      console.log(response.ressts);
+                      $("#btnAnskeyLinkSubmit").val("Try Again!");
+                    }
+                  },
+                  error: function () {
+                    $("#btnAnskeyLinkSubmit").val("Try Again! 😕");
+                    $("#btnAnskeyLinkSubmit").attr("disabled", false);
+                  },
+                });*/
+        });
+      });
+
+      function analize_data(BoardDom, keydata) {
+        var FinalResult = [];
+        var StudentData = [];
+        var dom_parser = new DOMParser();
+        dom_parser = dom_parser.parseFromString(keydata, "text/html");
+        $("#ans_key_view").html(
+          keydata.replaceAll('src="/per', 'src="' + BoardDom + "//per")
+        );
+        $(".print-pnl").hide();
+        $("#Result_view").show();
+        $("#Result_view tbody").children().remove();
+        $("#Result_view tfoot").children().remove();
+        $(".wrapper .main-info-pnl tr").each(function (i, maininfo) {
+          var stddata = {
+            key: $(this).children().first().text(),
+            value: $(this).children().last().text(),
+          };
+          stddata.value != "" && StudentData.push(stddata);
+        });
+        console.log(StudentData);
+        $(".main-info-pnl table").width("100%");
+        $("#ans_key_view .section-cntnr").each(function (j, sec) {
+          let SectionFinalResult = {
+            section: "",
+            correct: [],
+            wrong: [],
+            not_attempt: [],
+          };
+          SectionFinalResult.section = $(sec)
+            .find(".section-lbl>span")
+            .last()
+            .text();
+          //console.log(SectionFinalResult.section);
+          $(sec)
+            .find(".question-pnl")
+            .each(function (i, ques) {
+              let QuestionNo = i + 1;
+              var Question = $(ques).find(".questionRowTbl>tbody");
+              var ChosenOption = $(this)
+                .find(".menu-tbl tbody")
+                .children()
+                .last()
+                .children()
+                .last()
+                .text()
+                .trim();
+              var CorrectOption =
+                Question.children().find("td.rightAns").parent().index() - 2;
+
+              //console.log(QuestionNo + ") " + "Correct Option -> " + CorrectOption);
+              Question.find("tr").eq(1).children().eq(1).css("width", "auto");
+              Question.find("tr").eq(1).children().eq(2).css("display", "none");
+              Question.parent().css("background", "rgba(255,255,255,1)");
+              if (ChosenOption == "--") {
+                SectionFinalResult.not_attempt.push(QuestionNo);
+                //console.log(" Chosen Option -> " + "--");
+                $(this).addClass("not_attempt");
+                Question.parent().addClass("Q_not_attempt");
+              } else {
+                var intoption = parseInt(ChosenOption);
+                //console.log({CorrectOption,intoption});
+                // console.log(
+                // "Chosen Option -> " +
+                // intoption +
+                //     " | %c " +
+                //     (CorrectOption == intoption ? " ✓ " : " ✕ "),
+                //   "color:" + (CorrectOption == intoption ? "green;" : "red;")
+                // );
+                if (CorrectOption == intoption) {
+                  //console.log(" ✓ ");
+                  SectionFinalResult.correct.push(QuestionNo);
+                } else {
+                  //console.log(" ✕ ");
+                  SectionFinalResult.wrong.push(QuestionNo);
+                }
+                Question.parent().css(
+                  "background",
+                  CorrectOption == intoption
+                    ? "rgba(0,255,0,0.2)"
+                    : "rgba(255,0,0,0.2)"
+                );
+                $(this).addClass(
+                  CorrectOption == intoption ? "correct" : "wrong"
+                );
+                Question.parent().addClass(
+                  CorrectOption == intoption ? "Q_correct" : "Q_wrong"
+                );
+
+                Question.find("tr")
+                  .eq(intoption + 2)
+                  .children()
+                  .eq(1)
+                  .css(
+                    "border",
+                    "2px solid " +
+                      (CorrectOption == intoption ? "green" : "red")
+                  )
+                  .css("position", "relative");
+                Question.find("tr")
+                  .eq(intoption + 2)
+                  .children()
+                  .eq(1)
+                  .append(
+                    "<span style='position: absolute;top: 0;right: 0;font-size: smaller;box-shadow: 0 0.5rem 1rem 2px rgba(0, 0, 0, 0.15);background: rgb(255 255 255 / 44%);padding: 2px 8px;'>Choosen Option</span>"
+                  );
+              }
+            });
+          var t =
+            SectionFinalResult.correct.length +
+            SectionFinalResult.wrong.length +
+            SectionFinalResult.not_attempt.length;
+          console.log(
+            "Total= " +
+              t +
+              " | ✓ " +
+              SectionFinalResult.correct.length +
+              " | ✕ " +
+              SectionFinalResult.wrong.length +
+              " | -- " +
+              SectionFinalResult.not_attempt.length
+          );
+          //console.log(SectionFinalResult);
+          $(sec)
+            .find(".section-lbl>span")
+            .last()
+            .append(
+              "<i> >⁜> Total= " +
+                t +
+                " | <b class='text-success'>(✓) ->" +
+                SectionFinalResult.correct.length +
+                "</b> | <b class='text-danger'>(✕) ->" +
+                SectionFinalResult.wrong.length +
+                "</b> | (--) ->" +
+                SectionFinalResult.not_attempt.length +
+                "</i>"
+            );
+          FinalResult.push(SectionFinalResult);
+        });
+        var total_correct = 0;
+        var total_wrong = 0;
+        var total_not_attempt = 0;
+        var total_overall = 0;
+        var total_marks = 0;
+        FinalResult.forEach((sec) => {
+          total_correct += sec.correct.length;
+          total_wrong += sec.wrong.length;
+          total_not_attempt += sec.not_attempt.length;
+          total_overall +=
+            sec.not_attempt.length + sec.wrong.length + sec.correct.length;
+          let temp_totalmarks = (
+            sec.correct.length * 1 -
+            sec.wrong.length * 0.33
+          ).toFixed(2);
+          total_marks = (
+            parseFloat(total_marks) + parseFloat(temp_totalmarks)
+          ).toFixed(2);
+          $("#Result_view tbody")
+            .append(
+              "<tr><th class='sect' scope='row'>" +
+                sec.section +
+                "</th><td class='sect_total'>" +
+                (sec.not_attempt.length +
+                  sec.wrong.length +
+                  sec.correct.length) +
+                "</td><td class='sect_correct text-success'>" +
+                sec.correct.length +
+                "</td><td class='sect_wrong text-danger'>" +
+                sec.wrong.length +
+                "</td><td class='sect_not_attempt'>" +
+                sec.not_attempt.length +
+                "</td>" +
+                "</td><td class='sect_totalMarks'>" +
+                temp_totalmarks +
+                "</td></tr>"
+            )
+            .fadeIn("slow");
+        });
+
+        $("#Result_view tfoot")
+          .append(
+            "<tr><th scope='row'>Total</th><td class='total_overall'>" +
+              total_overall +
+              "</td><td class='total_correct text-success'>" +
+              total_correct +
+              "</td><td class='total_wrong text-danger'>" +
+              total_wrong +
+              "</td><td class='total_not_attempt'>" +
+              total_not_attempt +
+              "</td>" +
+              "</td><td class='total_Marks'>" +
+              total_marks +
+              "</td></tr>"
+          )
+          .fadeIn();
+        console.log(FinalResult);
+        const exampleModal = document.getElementById("exampleModal");
+        if (exampleModal) {
+          exampleModal.addEventListener("show.bs.modal", (event) => {
+            // Button that triggered the modal
+            const button = event.relatedTarget;
+            // Extract info from data-bs-* attributes
+            const recipient = button.getAttribute("data-bs-whatever");
+            // Update the modal's content.
+            const modalTitle = exampleModal.querySelector(".modal-title");
+            //var QuestionLIST = "";
+            let recipientCounter = 0;
+            $(".section-cntnr")
+              .find(".questionRowTbl.Q_" + recipient)
+              .each((i, e) => {
+                //QuestionLIST += "<table>" + e.innerHTML + "</table>";
+                recipientCounter++;
+                $("#exampleModal .modal-body")
+                  .append(
+                    "<table style='margin-bottom: 1em;border: 2px groove black;'>" +
+                      e.innerHTML +
+                      "</table>"
+                  )
+                  .fadeIn("slow");
+                //console.log(e);
+              });
+            var ModalHeadingText =
+              recipient == "correct"
+                ? "Correct"
+                : recipient == "wrong"
+                ? "Wrong"
+                : "Unattempted";
+            modalTitle.textContent = `Showing all ${ModalHeadingText} questions (total - ${recipientCounter})`;
+            //console.log(QuestionLIST);
+            //$("#exampleModal .modal-body").append(QuestionLIST);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>
