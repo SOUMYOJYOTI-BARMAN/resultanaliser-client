@@ -39,7 +39,7 @@
               id="inputAnskeyLink"
               name="AnskeyLink"
               aria-describedby="basic-addon3 basic-addon4"
-              value="https://rrb.digialm.com///per/g22/pub/2667/touchstone/AssessmentQPHTMLMode1//2667O248/2667O248S1D2414/17347860496592268/222242230410595_2667O248S1D2414E1.html"
+              value=""
               required
             />
           </div>
@@ -175,7 +175,7 @@
       src=""
       frameborder="0"
       style="width: 100%; height: 100vh"
-      id="iframe"
+      id="ans_key_view"
     ></iframe>
     <script type="text/javascript">
       $(document).ready(() => {
@@ -188,9 +188,17 @@
               /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
             )
         );
-        isLocalhost
-          ? $("#selectServer_div").show()
-          : $("#selectServer_div").hide();
+        // isLocalhost
+        //   ? $("#selectServer_div").show()
+        //   : $("#selectServer_div").hide();
+        if (isLocalhost) {
+          $("#selectServer_div").show();
+          $("#inputAnskeyLink").val(
+            "https://rrb.digialm.com///per/g22/pub/2667/touchstone/AssessmentQPHTMLMode1//2667O248/2667O248S1D2414/17347860496592268/222242230410595_2667O248S1D2414E1.html"
+          );
+        } else {
+          $("#selectServer_div").hide();
+        }
         $("#Result_view").hide();
         $("#resultAnalyzerForm").on("submit", async function (e) {
           e.preventDefault();
@@ -206,7 +214,16 @@
             alert("Please enter answer key url!");
             return;
           }
-          $("#iframe").attr("src", ans_key_url);
+          //$("#iframe").attr("src", ans_key_url);
+          $("#ans_key_view").load(ans_key_url, function () {
+            console.log("iframe loaded");
+            console.log($("#ans_key_view html").prop("outerHTML"));
+            analize_data(
+              BoardDomain,
+              $("#ans_key_view html").prop("outerHTML")
+            );
+          });
+
           $("#btnAnskeyLinkSubmit").attr("disabled", true);
           await fetch(
             `${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`
@@ -217,7 +234,7 @@
               $("#btnAnskeyLinkSubmit").attr("disabled", false);
               //console.log(response);
               //keydataresponse = response; // JSON.parse(response);
-              $("#btnAnskeyLinkSubmit").val("Submit");
+              $("#btnAnskeyLinkSubmit").html("Submit");
               //console.log(keydataresponse);
               if (data.ressts.trim() == "data-received") {
                 analize_data(BoardDomain, data.resdata);
