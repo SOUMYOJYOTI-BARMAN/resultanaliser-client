@@ -208,20 +208,24 @@
             : "https://netlifyproxysb.netlify.app";
           ans_key_url = ans_key_url.split(".html"); // from submitting single ansswer key url
           ans_key_url = ans_key_url[0] + ".html";
-          //console.log(ans_key_url);
+          console.log(ans_key_url);
           var BoardDomain = ans_key_url.split("/per")[0];
           if (ans_key_url.trim() == "") {
             alert("Please enter answer key url!");
             return;
           }
-          //$("#iframe").attr("src", ans_key_url);
-          $("#ans_key_view").load(ans_key_url, function () {
-            console.log("iframe loaded");
-            console.log($("#ans_key_view").prop("outerHTML"));
-            analize_data(BoardDomain, $("#ans_key_view ").prop("outerHTML"));
-          });
-
-          $("#btnAnskeyLinkSubmit").attr("disabled", true);
+          console.log("iframe loaded starting...");
+          $("#ans_key_view").attr("src", ans_key_url);
+          /*$("#ans_key_view").load(
+            ans_key_url,
+            await function () {
+              console.log("iframe loaded");
+              //console.log($("#ans_key_view").html());
+              //analize_data(BoardDomain, $("#ans_key_view ").html());
+            }
+          );*/
+          console.log("iframe loaded");
+          /* $("#btnAnskeyLinkSubmit").attr("disabled", true);
           await fetch(
             `${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`
           ) //https://netlifyproxysb.netlify.app
@@ -268,7 +272,7 @@
                 "content"
               ).textContent = `Error: ${error.message}`;
             });
-
+*/
           /*$.ajax({
                   type: "GET",
                   url: `https://netlifyproxysb.netlify.app/proxy?url=${encodeURIComponent(
