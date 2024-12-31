@@ -217,11 +217,8 @@
           //$("#iframe").attr("src", ans_key_url);
           $("#ans_key_view").load(ans_key_url, function () {
             console.log("iframe loaded");
-            console.log($("#ans_key_view html").prop("outerHTML"));
-            analize_data(
-              BoardDomain,
-              $("#ans_key_view html").prop("outerHTML")
-            );
+            console.log($("#ans_key_view").prop("outerHTML"));
+            analize_data(BoardDomain, $("#ans_key_view ").prop("outerHTML"));
           });
 
           $("#btnAnskeyLinkSubmit").attr("disabled", true);
