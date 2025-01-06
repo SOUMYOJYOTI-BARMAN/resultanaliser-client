@@ -66,27 +66,67 @@
         </div>
       </div>
     </div>
-    <div id="Result_view" class="container shadow p-5 mt-3 mb-3">
+    <div id="Result_view" class="container shadow p-5 mt-3 mb-3" hidden>
       <h3 class="text-center">Detailed Analysis</h3>
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">Section</th>
-            <th scope="col">Total Questions</th>
-            <th scope="col">Correct</th>
-            <th scope="col">Wrong</th>
-            <th scope="col">Not Attempt</th>
-            <th scope="col">
-              Total Marks<br />
-              <i
-                ><span class="text-danger">(+1)</span>
-                <span class="text-success">(-0.33)</span></i
-              >
-            </th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          <!-- <tr>
+      <div class="marks_value_div row">
+        <p class="col-12 text-info-emphasis">
+          *you can change marks for each questions
+        </p>
+        <div class="col-6">
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01"
+              >Marks for each &nbsp;<b class="text-success">Correct</b>&nbsp;
+              attempt</label
+            >
+            <select class="form-select" id="input_marks_correct">
+              <option selected value="0">Choose...</option>
+              <option value="1">+1</option>
+              <option value="2">+2</option>
+              <option value="3">+3</option>
+              <option value="4">+4</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect02"
+              >Marks for each &nbsp;<b class="text-danger">Wrong</b>&nbsp;
+              attempt</label
+            >
+            <select class="form-select" id="input_marks_wrong">
+              <option selected value="0">Choose...</option>
+              <option value="1">-1</option>
+              <option value="0.5">-0.5</option>
+              <option value="0.33">-0.33</option>
+              <option value="0.25">-0.25</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="result_table_div">
+        <table class="table table-striped table-bordered">
+          <thead class="text-center">
+            <tr>
+              <th scope="col">Section</th>
+              <th scope="col">Total Questions</th>
+              <th scope="col">Correct</th>
+              <th scope="col">Wrong</th>
+              <th scope="col">Not Attempt</th>
+              <th scope="col">
+                Total Marks<br />
+                <i
+                  ><span class="text-success" id="span_correct_marks"
+                    >(+1)</span
+                  >
+                  <span class="text-danger" id="span_wrong_marks"
+                    >(-0.33)</span
+                  ></i
+                >
+              </th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <!-- <tr>
                     <td>Section 1</td>
                     <td>10</td>
                     <td>5</td>
@@ -94,9 +134,10 @@
                     <td>15</td>
                     <td>15</td>
                 </tr> -->
-        </tbody>
-        <tfoot></tfoot>
-      </table>
+          </tbody>
+          <tfoot></tfoot>
+        </table>
+      </div>
       <div
         class=""
         style="
@@ -135,6 +176,20 @@
           Not Attempt
         </button>
       </div>
+      <!-- <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
+          <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
+          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
+          <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false" disabled>Disabled</button>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">...</div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">...</div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">...</div>
+        <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">...</div>
+      </div> -->
     </div>
     <div
       class="modal fade"
@@ -169,15 +224,192 @@
         </div>
       </div>
     </div>
-    <div id="ans_key_view" class="container-fluid"></div>
     <div id="content"></div>
-    <iframe
+    <div id="ans_key_view" class="container-fluid" hidden></div>
+    <!-- <iframe
       src=""
       frameborder="0"
-      style="width: 100%; height: 100vh"
+      style="width: 100%; height: auto"
       id="ans_key_view"
-    ></iframe>
+    ></iframe> -->
     <script type="text/javascript">
+      var BoardDomain = "";
+      var KeyData = "";
+      var tbl_Question = [];
+      /*
+      Question_table = [{
+      section:"Section1",
+      question_number:1,
+      question_text:"Q1",
+      option1:"A1",
+      option2:"A2",
+      option3:"A3",
+      option4:"A4",
+      answer:"option1",
+      choosen_option:"option2",
+      sts:2(0=not_attempt,1=correct,2=wrong),
+      //correct_marks:1,
+      //wrong_marks:0.33
+      },{...}]
+
+      Question_table = [{
+      section:"Section1",
+      question_number:1,
+      question_text:"Q1",
+      options:["A1", "A2", "A3", "A4"],
+      answer:"0",
+      choosen_option:"1",
+      sts:2(0=not_attempt,1=correct,2=wrong),
+      //correct_marks:1,
+      //wrong_marks:0.33
+      },{...}]
+      */
+      var Q_status = ["not_attempt", "correct", "wrong"];
+      var Q_status_color = {
+        not_attempt: "bg-light",
+        correct: "bg-success",
+        wrong: "bg-danger",
+      };
+      var Q_status_text = {
+        not_attempt: "Not Attempt",
+        correct: "Correct",
+        wrong: "Wrong",
+      };
+      var Q_status_tooltip = {
+        not_attempt: "Question not attempted yet.",
+        correct: "You answered correctly.",
+        wrong: "You answered incorrectly.",
+      };
+      var Exams = [
+        {
+          SSC_CGL: {
+            Tier_I: {
+              General_Intelligence_and_Reasoning: {
+                correct_marks: 2,
+                wrong_marks: -0.5,
+              },
+              General_Awareness: {
+                correct_marks: 2,
+                wrong_marks: -0.5,
+              },
+              Quantitative_Aptitude: {
+                correct_marks: 2,
+                wrong_marks: -0.5,
+              },
+              English_Comprehension: {
+                correct_marks: 2,
+                wrong_marks: -0.5,
+              },
+            },
+            Tier_II: {
+              Mathematical_Abilities: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+              Reasoning_and_General_Intelligence: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+              English_Language_and_Comprehension: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+              General_Awareness: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+              Computer_Knowledge_Test: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+            },
+          },
+          SSC_CHSL: {
+            Tier_I: {
+              English_Language: {
+                correct_marks: 2,
+                wrong_marks: -0.5,
+              },
+              General_Intelligence: {
+                correct_marks: 2,
+                wrong_marks: -0.5,
+              },
+              Quantitative_Aptitude: {
+                correct_marks: 2,
+                wrong_marks: -0.5,
+              },
+              General_Awareness: {
+                correct_marks: 2,
+                wrong_marks: -0.5,
+              },
+            },
+            Tier_II: {
+              Mathematical_Abilities: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+              Reasoning_and_General_Intelligence: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+              English_Language_and_Comprehension: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+              General_Awareness: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+              Computer_Knowledge_Test: {
+                correct_marks: 3,
+                wrong_marks: -1,
+              },
+            },
+          },
+          SSC_MTS: {
+            Session_I: {
+              Numerical_and_Mathematical_Ability: {
+                correct_marks: 1,
+                wrong_marks: 0,
+              },
+              Reasoning_Ability_and_Problem_Solving: {
+                correct_marks: 1,
+                wrong_marks: 0,
+              },
+            },
+            Session_II: {
+              General_Awareness: {
+                correct_marks: 1,
+                wrong_marks: -0.25,
+              },
+              English_Language_and_Comprehension: {
+                correct_marks: 1,
+                wrong_marks: -0.25,
+              },
+            },
+          },
+          SSC_GD: {
+            CBT: {
+              General_Intelligence_and_Reasoning: {
+                correct_marks: 2,
+                wrong_marks: 0,
+              },
+              General_Knowledge_and_Awareness: {
+                correct_marks: 2,
+                wrong_marks: 0,
+              },
+              Elementary_Mathematics: {
+                correct_marks: 2,
+                wrong_marks: 0,
+              },
+              English_or_Hindi: {
+                correct_marks: 2,
+                wrong_marks: 0,
+              },
+            },
+          },
+        },
+      ];
       $(document).ready(() => {
         const isLocalhost = Boolean(
           window.location.hostname === "localhost" ||
@@ -188,18 +420,16 @@
               /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
             )
         );
-        // isLocalhost
-        //   ? $("#selectServer_div").show()
-        //   : $("#selectServer_div").hide();
+
         if (isLocalhost) {
           $("#selectServer_div").show();
           $("#inputAnskeyLink").val(
-            "https://rrb.digialm.com///per/g22/pub/2667/touchstone/AssessmentQPHTMLMode1//2667O248/2667O248S1D2414/17347860496592268/222242230410595_2667O248S1D2414E1.html"
+            "https://ssc.digialm.com//per/g27/pub/32874/touchstone/AssessmentQPHTMLMode1//32874O2470/32874O2470S57D154965/17321958678562028/4410088737_32874O2470S57D154965E1.html#"
           );
+          //"https://rrb.digialm.com///per/g22/pub/2667/touchstone/AssessmentQPHTMLMode1//2667O248/2667O248S1D2414/17347860496592268/222242230410595_2667O248S1D2414E1.html"
         } else {
           $("#selectServer_div").hide();
         }
-        $("#Result_view").hide();
         $("#resultAnalyzerForm").on("submit", async function (e) {
           e.preventDefault();
           var ans_key_url = $("#inputAnskeyLink").val();
@@ -208,24 +438,29 @@
             : "https://netlifyproxysb.netlify.app";
           ans_key_url = ans_key_url.split(".html"); // from submitting single ansswer key url
           ans_key_url = ans_key_url[0] + ".html";
-          console.log(ans_key_url);
-          var BoardDomain = ans_key_url.split("/per")[0];
+          console.log(
+            `${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`
+          );
           if (ans_key_url.trim() == "") {
             alert("Please enter answer key url!");
             return;
           }
-          console.log("iframe loaded starting...");
-          $("#ans_key_view").attr("src", ans_key_url);
-          /*$("#ans_key_view").load(
-            ans_key_url,
-            await function () {
-              console.log("iframe loaded");
-              //console.log($("#ans_key_view").html());
-              //analize_data(BoardDomain, $("#ans_key_view ").html());
-            }
-          );*/
-          console.log("iframe loaded");
-          /* $("#btnAnskeyLinkSubmit").attr("disabled", true);
+          BoardDomain = ans_key_url.split("/per")[0];
+          console.log(BoardDomain);
+          /* console.log("iframe loaded starting...");
+                   $("#ans_key_view").attr("src", ans_key_url);
+              $("#ans_key_view").load(
+                        ans_key_url,
+                        await function () {
+                          console.log("iframe loaded");
+                          console.log($("#ans_key_view").html());
+                          analize_data(BoardDomain, $("#ans_key_view ").html());
+                        }
+                      );
+                console.log("iframe loaded");*/
+
+          $("#btnAnskeyLinkSubmit").attr("disabled", true);
+          $("#btnAnskeyLinkSubmit").html("getting data...");
           await fetch(
             `${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`
           ) //https://netlifyproxysb.netlify.app
@@ -238,7 +473,9 @@
               $("#btnAnskeyLinkSubmit").html("Submit");
               //console.log(keydataresponse);
               if (data.ressts.trim() == "data-received") {
-                analize_data(BoardDomain, data.resdata);
+                KeyData = data.resdata;
+                ExtractData();
+                analize_data(); //BoardDomain, data.resdata
               } else {
                 console.log(data.ressts);
                 $("#btnAnskeyLinkSubmit").html("Try Again!");
@@ -250,77 +487,175 @@
               console.log(error);
             });
           console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-          await fetch(ans_key_url, {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              console.log(response);
-              return response.text();
-            })
-            .then((html) => {
-              document.getElementById("content").innerHTML = html;
-            })
-            .catch((error) => {
-              console.log(error);
-              document.getElementById(
-                "content"
-              ).textContent = `Error: ${error.message}`;
-            });
-*/
+
           /*$.ajax({
-                  type: "GET",
-                  url: `https://netlifyproxysb.netlify.app/proxy?url=${encodeURIComponent(
-                    ans_key_url
-                  )}`, //"https://resultanalizer.netlify.app/.netlify/functions/api/fetch-page", //"http://localhost:3001/fetch-page",
-                  data: {}, //ans_key_url: ans_key_url
-                  async: true,
-                  cache: false,
-                  /*headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-                  },*/
+                              type: "GET",
+                              url: `https://netlifyproxysb.netlify.app/proxy?url=${encodeURIComponent(
+                                ans_key_url
+                              )}`, //"https://resultanalizer.netlify.app/.netlify/functions/api/fetch-page", //"http://localhost:3001/fetch-page",
+                              data: {}, //ans_key_url: ans_key_url
+                              async: true,
+                              cache: false,
+                              /*headers: {
+                                "Content-Type": "application/json",
+                                "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+                              },*/
           /*beforeSend: function () {
-                    $("#btnAnskeyLinkSubmit").val("getting data...");
-                  },
-                  success: function (response) {
-                    $("#btnAnskeyLinkSubmit").attr("disabled", false);
-                    //console.log(response);
-                    //keydataresponse = response; // JSON.parse(response);
-                    $("#btnAnskeyLinkSubmit").val("Submit");
-                    //console.log(keydataresponse);
-                    if (response.ressts.trim() == "data-received") {
-                      analize_data(BoardDomain, response.resdata);
-                    } else {
-                      console.log(response.ressts);
-                      $("#btnAnskeyLinkSubmit").val("Try Again!");
-                    }
-                  },
-                  error: function () {
-                    $("#btnAnskeyLinkSubmit").val("Try Again! 😕");
-                    $("#btnAnskeyLinkSubmit").attr("disabled", false);
-                  },
-                });*/
+                                $("#btnAnskeyLinkSubmit").val("getting data...");
+                              },
+                              success: function (response) {
+                                $("#btnAnskeyLinkSubmit").attr("disabled", false);
+                                //console.log(response);
+                                //keydataresponse = response; // JSON.parse(response);
+                                $("#btnAnskeyLinkSubmit").val("Submit");
+                                //console.log(keydataresponse);
+                                if (response.ressts.trim() == "data-received") {
+                                  analize_data(BoardDomain, response.resdata);
+                                } else {
+                                  console.log(response.ressts);
+                                  $("#btnAnskeyLinkSubmit").val("Try Again!");
+                                }
+                              },
+                              error: function () {
+                                $("#btnAnskeyLinkSubmit").val("Try Again! 😕");
+                                $("#btnAnskeyLinkSubmit").attr("disabled", false);
+                              },
+                            });*/
         });
       });
+      function ExtractData() {
+        if (BoardDomain == "" || KeyData == "") {
+          alert("Data not found");
+          return;
+        }
+        var dom_parser = new DOMParser();
+        dom_parser = dom_parser.parseFromString(KeyData, "text/html");
+        $("#ans_key_view").html(
+          KeyData.replaceAll('src="/per', 'src="' + BoardDomain + "//per")
+        );
 
-      function analize_data(BoardDom, keydata) {
+        $(".print-pnl").hide(); //hide Print Button Of Answer Key;
+
+        //Extract Student Data from Answer Key
+        $(".wrapper .main-info-pnl tr").each(function (i, maininfo) {
+          var stddata = {
+            key: $(this)
+              .children()
+              .first()
+              .text()
+              .trimStart()
+              .trimEnd()
+              .replace(" ", "_"),
+            value: $(this).children().last().text(),
+          };
+          stddata.value != "" && StudentData.push(stddata);
+        });
+        console.log(StudentData);
+
+        //Extract Question Data from Answer Key
+        $("#ans_key_view .section-cntnr").each(function (j, section_cntnr) {
+          $(section_cntnr)
+            .find(".question-pnl")
+            .each(function (i, question_pnl) {
+              let QuestionNo = i + 1;
+              var Q_tbody = $(question_pnl).find(".questionRowTbl>tbody");
+              var ChosenOption = $(section_cntnr)
+                .find(".menu-tbl tbody")
+                .children()
+                .last()
+                .children()
+                .last()
+                .text()
+                .trim();
+              var CorrectOption =
+                Q_tbody.children().find("td.rightAns").parent().index() - 2;
+
+              var sts_temp = "";
+              if (ChosenOption == "--") {
+                sts_temp = Q_status[0];
+              } else {
+                var intoption = parseInt(ChosenOption);
+                if (CorrectOption == intoption) {
+                  sts_temp = Q_status[1];
+                } else {
+                  sts_temp = Q_status[2];
+                }
+              }
+              var Qs = {
+                section: $(section_cntnr)
+                  .find(".section-lbl>span")
+                  .last()
+                  .text(),
+                question_number: Q_tbody.children()
+                  .eq(1)
+                  .children()
+                  .eq(0)
+                  .text(),
+                question_text: Q_tbody.children().eq(1).children().eq(1).html(),
+                option1: Q_tbody.children().eq(3).children().eq(1).html(),
+                option2: Q_tbody.children().eq(4).children().eq(1).html(),
+                option3: Q_tbody.children().eq(5).children().eq(1).html(),
+                option4: Q_tbody.children().eq(6).children().eq(1).html(),
+                option5: Q_tbody.children().eq(7)?.children().eq(1).html(),
+                answer:
+                  "option" +
+                  (Question.children().find("td.rightAns").parent().index() -
+                    2),
+                choosen_option:
+                  "option" + (ChosenOption == "--" ? "0" : ChosenOption),
+                sts: sts_temp, //(0=not_attempt,1=correct,2=wrong),
+              };
+              tbl_Question.push(Qs);
+            });
+          console.log(tbl_Question);
+        });
+      }
+      function analize_data() {
+        if (BoardDomain == "" || KeyData == "") {
+          alert("Data not found");
+          return;
+        }
+        //BoardDomain, KeyData
         var FinalResult = [];
         var StudentData = [];
-        var dom_parser = new DOMParser();
-        dom_parser = dom_parser.parseFromString(keydata, "text/html");
-        $("#ans_key_view").html(
-          keydata.replaceAll('src="/per', 'src="' + BoardDom + "//per")
+        var marks_correct = 0;
+        var marks_wrong = 0;
+        if (BoardDomain.includes("rrb")) {
+          marks_correct = 1;
+          marks_wrong = 0.33;
+        } else if (BoardDomain.includes("ssc")) {
+          marks_correct = 1;
+          marks_wrong = 0.25;
+        } else {
+          marks_correct = 1;
+          marks_wrong = 0;
+        }
+        $("#input_marks_correct option[value='" + marks_correct + "']").attr(
+          "selected",
+          "selected"
         );
+        $("#input_marks_wrong option[value='" + marks_wrong + "']").attr(
+          "selected",
+          "selected"
+        );
+        marks_correct = $("#input_marks_correct").find(":selected").val();
+        marks_wrong = $("#input_marks_wrong").find(":selected").val();
+        //console.log({ marks_correct, marks_wrong });
+        $("#span_correct_marks").html("(+" + marks_correct + ")");
+        $("#span_wrong_marks").html("(-" + marks_wrong + ")");
+
+        var dom_parser = new DOMParser();
+        dom_parser = dom_parser.parseFromString(KeyData, "text/html");
+        $("#ans_key_view").html(
+          KeyData.replaceAll('src="/per', 'src="' + BoardDomain + "//per")
+        );
+
         $(".print-pnl").hide();
-        $("#Result_view").show();
+        //$("#ans_key_view").attr("hidden", false);
+        $("#Result_view").attr("hidden", false);
         $("#Result_view tbody").children().remove();
         $("#Result_view tfoot").children().remove();
+
         $(".wrapper .main-info-pnl tr").each(function (i, maininfo) {
           var stddata = {
             key: $(this).children().first().text(),
@@ -329,6 +664,7 @@
           stddata.value != "" && StudentData.push(stddata);
         });
         console.log(StudentData);
+
         $(".main-info-pnl table").width("100%");
         $("#ans_key_view .section-cntnr").each(function (j, sec) {
           let SectionFinalResult = {
@@ -362,6 +698,8 @@
               Question.find("tr").eq(1).children().eq(1).css("width", "auto");
               Question.find("tr").eq(1).children().eq(2).css("display", "none");
               Question.parent().css("background", "rgba(255,255,255,1)");
+
+              var sts_temp = Q_status[0];
               if (ChosenOption == "--") {
                 SectionFinalResult.not_attempt.push(QuestionNo);
                 //console.log(" Chosen Option -> " + "--");
@@ -370,20 +708,17 @@
               } else {
                 var intoption = parseInt(ChosenOption);
                 //console.log({CorrectOption,intoption});
-                // console.log(
-                // "Chosen Option -> " +
-                // intoption +
-                //     " | %c " +
-                //     (CorrectOption == intoption ? " ✓ " : " ✕ "),
-                //   "color:" + (CorrectOption == intoption ? "green;" : "red;")
-                // );
+                // console.log("Chosen Option -> " +intoption + " | %c " + (CorrectOption == intoption ? " ✓ " : " ✕ "), "color:" + (CorrectOption == intoption ? "green;" : "red;"));
                 if (CorrectOption == intoption) {
                   //console.log(" ✓ ");
+                  sts_temp = Q_status[1];
                   SectionFinalResult.correct.push(QuestionNo);
                 } else {
                   //console.log(" ✕ ");
+                  sts_temp = Q_status[2];
                   SectionFinalResult.wrong.push(QuestionNo);
                 }
+
                 Question.parent().css(
                   "background",
                   CorrectOption == intoption
@@ -415,21 +750,39 @@
                     "<span style='position: absolute;top: 0;right: 0;font-size: smaller;box-shadow: 0 0.5rem 1rem 2px rgba(0, 0, 0, 0.15);background: rgb(255 255 255 / 44%);padding: 2px 8px;'>Choosen Option</span>"
                   );
               }
+
+              var Qs = {
+                section: $(sec).find(".section-lbl>span").last().text(),
+                question_number: Question.children()
+                  .eq(1)
+                  .children()
+                  .eq(0)
+                  .text(),
+                question_text: Question.children()
+                  .eq(1)
+                  .children()
+                  .eq(1)
+                  .html(),
+                option1: Question.children().eq(3).children().eq(1).html(),
+                option2: Question.children().eq(4).children().eq(1).html(),
+                option3: Question.children().eq(5).children().eq(1).html(),
+                option4: Question.children().eq(6).children().eq(1).html(),
+                option5: Question.children().eq(7)?.children().eq(1).html(),
+                answer:
+                  "option" +
+                  (Question.children().find("td.rightAns").parent().index() -
+                    2),
+                choosen_option:
+                  "option" + (ChosenOption == "--" ? "0" : ChosenOption),
+                sts: sts_temp, //(0=not_attempt,1=correct,2=wrong),
+              };
+              //tbl_Question.push(Qs);
             });
           var t =
             SectionFinalResult.correct.length +
             SectionFinalResult.wrong.length +
             SectionFinalResult.not_attempt.length;
-          console.log(
-            "Total= " +
-              t +
-              " | ✓ " +
-              SectionFinalResult.correct.length +
-              " | ✕ " +
-              SectionFinalResult.wrong.length +
-              " | -- " +
-              SectionFinalResult.not_attempt.length
-          );
+          //console.log("Total= " +t +" | ✓ " +SectionFinalResult.correct.length +" | ✕ " +SectionFinalResult.wrong.length +" | -- " +SectionFinalResult.not_attempt.length);
           //console.log(SectionFinalResult);
           $(sec)
             .find(".section-lbl>span")
@@ -447,6 +800,7 @@
             );
           FinalResult.push(SectionFinalResult);
         });
+
         var total_correct = 0;
         var total_wrong = 0;
         var total_not_attempt = 0;
@@ -459,8 +813,8 @@
           total_overall +=
             sec.not_attempt.length + sec.wrong.length + sec.correct.length;
           let temp_totalmarks = (
-            sec.correct.length * 1 -
-            sec.wrong.length * 0.33
+            sec.correct.length * marks_correct -
+            sec.wrong.length * marks_wrong
           ).toFixed(2);
           total_marks = (
             parseFloat(total_marks) + parseFloat(temp_totalmarks)
@@ -486,7 +840,6 @@
             )
             .fadeIn("slow");
         });
-
         $("#Result_view tfoot")
           .append(
             "<tr><th scope='row'>Total</th><td class='total_overall'>" +
@@ -502,8 +855,9 @@
               total_marks +
               "</td></tr>"
           )
-          .fadeIn();
-        console.log(FinalResult);
+          .fadeIn("slow");
+        //console.log(FinalResult);
+
         const exampleModal = document.getElementById("exampleModal");
         if (exampleModal) {
           exampleModal.addEventListener("show.bs.modal", (event) => {
@@ -515,7 +869,7 @@
             const modalTitle = exampleModal.querySelector(".modal-title");
             //var QuestionLIST = "";
             let recipientCounter = 0;
-            $(".section-cntnr")
+            /*$(".section-cntnr")
               .find(".questionRowTbl.Q_" + recipient)
               .each((i, e) => {
                 //QuestionLIST += "<table>" + e.innerHTML + "</table>";
@@ -528,18 +882,190 @@
                   )
                   .fadeIn("slow");
                 //console.log(e);
-              });
+              });*/
+            //var List_temp = getQuestionList("all", recipient);
+            $("#exampleModal .modal-body")
+              .empty()
+              .append(getSectionWiseQuestions("all", recipient)) //List_temp.QuestionsHtml
+              .fadeIn("slow");
             var ModalHeadingText =
               recipient == "correct"
                 ? "Correct"
                 : recipient == "wrong"
                 ? "Wrong"
                 : "Unattempted";
-            modalTitle.textContent = `Showing all ${ModalHeadingText} questions (total - ${recipientCounter})`;
+            modalTitle.textContent = `Showing all ${ModalHeadingText} questions `; //(total - ${List_temp.Count})
             //console.log(QuestionLIST);
             //$("#exampleModal .modal-body").append(QuestionLIST);
           });
         }
+        $("#content").append(getSectionWiseQuestions("all", Q_status[1])); //"all"
+      }
+
+      function getQuestionList(Qstatus) {
+        var QuestionLIST = "";
+        var tbl_Question_Filter = tbl_Question;
+        if (Qstatus != "all") {
+          tbl_Question_Filter = tbl_Question_Filter.filter(
+            (e) => e.sts == Qstatus
+          );
+        }
+        tbl_Question_Filter.forEach((e, i) => {
+          QuestionLIST +=
+            "<div class='card m-2 QuestionCard " +
+            String(e.question_number).replace(".", "_") +
+            "'>" +
+            "<div class='card-header'><i>" +
+            e.question_number +
+            ")</i>&nbsp;<p class='card-text'>" +
+            e.question_text +
+            "</p></div>" +
+            "<div class='card-body'>" +
+            "<ul class='list-group'>" +
+            "<li class='list-group-item " +
+            (e.answer == "option1"
+              ? "list-group-item-success"
+              : "list-group-item-danger") +
+            "'>" +
+            e.option1 +
+            "</li>" +
+            "<li class='list-group-item " +
+            (e.answer == "option2"
+              ? "list-group-item-success"
+              : "list-group-item-danger") +
+            "'>" +
+            e.option2 +
+            "</li>" +
+            "<li class='list-group-item " +
+            (e.answer == "option3"
+              ? "list-group-item-success"
+              : "list-group-item-danger") +
+            "'>" +
+            e.option3 +
+            "</li>" +
+            "<li class='list-group-item " +
+            (e.answer == "option4"
+              ? "list-group-item-success"
+              : "list-group-item-danger") +
+            "'>" +
+            e.option4 +
+            "</li>" +
+            (e.option5 != undefined
+              ? "<li class='list-group-item " +
+                (e.answer == "option5"
+                  ? "list-group-item-success"
+                  : "list-group-item-danger") +
+                "'>" +
+                e.option5 +
+                "</li>"
+              : "") +
+            "<li class='list-group-item d-flex align-items-center justify-content-between text-dark-emphasis'>" +
+            "<span><b>Correct Option:&nbsp;<u>" +
+            e.answer +
+            "</u></b></span>" +
+            "<span><b>Choosen Option:&nbsp;<u>" +
+            (e.choosen_option != "option0" ? e.choosen_option : "--") +
+            "</u></b></span>" +
+            "</li>" +
+            "</ul>" +
+            "</div>" +
+            "</div>";
+        });
+        return {
+          QuestionsHtml: QuestionLIST,
+          Count: tbl_Question_Filter.length,
+        };
+      }
+      function getSectionWiseQuestions(Section, Qstatus) {
+        var sections = [];
+        var sections_filter = tbl_Question;
+        if (Section != "all") {
+          sections_filter = sections_filter.filter((e) => e.section == Section);
+        }
+        sections_filter.forEach((e) => {
+          if (sections[e.section]) {
+            sections[e.section].push(e);
+          } else {
+            sections[e.section] = [e];
+          }
+        });
+        var section_wise_questions = "";
+        for (var sec in sections) {
+          var Sec_Question_Filter = sections[sec];
+          if (Qstatus != "all") {
+            Sec_Question_Filter = sections[sec].filter((e) => e.sts == Qstatus);
+          }
+          console.log(Sec_Question_Filter);
+          section_wise_questions +=
+            "<div class='card mb-5'>" +
+            "<h5 class='card-header text-center text-bg-secondary'>" +
+            sec +
+            "</h5>" +
+            "<div class='card-body'>";
+          Sec_Question_Filter.forEach((e) => {
+            section_wise_questions +=
+              "<div class='card m-2 QuestionCard " +
+              String(e.question_number).replace(".", "_") +
+              "'>" +
+              "<div class='card-header'><i>" +
+              e.question_number +
+              ")</i>&nbsp;<p class='card-text'>" +
+              e.question_text +
+              "</p></div>" +
+              "<div class='card-body'>" +
+              "<ul class='list-group'>" +
+              "<li class='list-group-item " +
+              (e.answer == "option1"
+                ? "list-group-item-success"
+                : "list-group-item-danger") +
+              "'>" +
+              e.option1 +
+              "</li>" +
+              "<li class='list-group-item " +
+              (e.answer == "option2"
+                ? "list-group-item-success"
+                : "list-group-item-danger") +
+              "'>" +
+              e.option2 +
+              "</li>" +
+              "<li class='list-group-item " +
+              (e.answer == "option3"
+                ? "list-group-item-success"
+                : "list-group-item-danger") +
+              "'>" +
+              e.option3 +
+              "</li>" +
+              "<li class='list-group-item " +
+              (e.answer == "option4"
+                ? "list-group-item-success"
+                : "list-group-item-danger") +
+              "'>" +
+              e.option4 +
+              "</li>" +
+              (e.option5 != undefined
+                ? "<li class='list-group-item " +
+                  (e.answer == "option5"
+                    ? "list-group-item-success"
+                    : "list-group-item-danger") +
+                  "'>" +
+                  e.option5 +
+                  "</li>"
+                : "") +
+              "<li class='list-group-item d-flex align-items-center justify-content-between text-dark-emphasis'>" +
+              "<span><b>Correct Option:&nbsp;<u>" +
+              e.answer +
+              "</u></b></span>" +
+              "<span><b>Choosen Option:&nbsp;<u>" +
+              (e.choosen_option != "option0" ? e.choosen_option : "--") +
+              "</u></b></span>" +
+              "</li>" +
+              "</ul>" +
+              "</div>" +
+              "</div>";
+          });
+          section_wise_questions += "</div></div>";
+        }
+        return section_wise_questions;
       }
     </script>
   </body>
