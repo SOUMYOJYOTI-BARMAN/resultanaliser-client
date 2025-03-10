@@ -14,6 +14,74 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
+    <style type="text/css">
+      .loadersection {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        height: 100%;
+        width: 100%;
+      }
+      /* From Uiverse.io by AqFox */
+      .spinner {
+        width: 44px;
+        height: 44px;
+        animation: spinner-y0fdc1 2s infinite ease;
+        transform-style: preserve-3d;
+      }
+
+      .spinner > div {
+        background-color: rgba(0, 77, 255, 0.2);
+        height: 100%;
+        position: absolute;
+        width: 100%;
+        border: 2px solid #004dff;
+      }
+
+      .spinner div:nth-of-type(1) {
+        transform: translateZ(-22px) rotateY(180deg);
+      }
+
+      .spinner div:nth-of-type(2) {
+        transform: rotateY(-270deg) translateX(50%);
+        transform-origin: top right;
+      }
+
+      .spinner div:nth-of-type(3) {
+        transform: rotateY(270deg) translateX(-50%);
+        transform-origin: center left;
+      }
+
+      .spinner div:nth-of-type(4) {
+        transform: rotateX(90deg) translateY(-50%);
+        transform-origin: top center;
+      }
+
+      .spinner div:nth-of-type(5) {
+        transform: rotateX(-90deg) translateY(50%);
+        transform-origin: bottom center;
+      }
+
+      .spinner div:nth-of-type(6) {
+        transform: translateZ(22px);
+      }
+
+      @keyframes spinner-y0fdc1 {
+        0% {
+          transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
+        }
+
+        50% {
+          transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+        }
+
+        100% {
+          transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+        }
+      }
+    </style>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -59,74 +127,91 @@
             aria-label="Default select example"
             id="selectServer"
           >
-            <option selected>server url</option>
+            <!-- <option>server url</option> -->
             <option value="https://netlifyproxysb.netlify.app">Netlify</option>
-            <option value="http://localhost:8888">Local</option>
+            <option value="http://localhost:8888" selected>Local</option>
           </select>
         </div>
       </div>
-    </div>
-    <div id="Result_view" class="container shadow p-5 mt-3 mb-3" hidden>
-      <h3 class="text-center">Detailed Analysis</h3>
-      <div class="marks_value_div row">
-        <p class="col-12 text-info-emphasis">
-          *you can change marks for each questions
-        </p>
-        <div class="col-6">
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01"
-              >Marks for each &nbsp;<b class="text-success">Correct</b>&nbsp;
-              attempt</label
-            >
-            <select class="form-select" id="input_marks_correct">
-              <option selected value="0">Choose...</option>
-              <option value="1">+1</option>
-              <option value="2">+2</option>
-              <option value="3">+3</option>
-              <option value="4">+4</option>
-            </select>
-          </div>
+      <div class="loadersection">
+        <!--spinner Start-->
+        <div class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-        <div class="col-6">
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect02"
-              >Marks for each &nbsp;<b class="text-danger">Wrong</b>&nbsp;
-              attempt</label
-            >
-            <select class="form-select" id="input_marks_wrong">
-              <option selected value="0">Choose...</option>
-              <option value="1">-1</option>
-              <option value="0.5">-0.5</option>
-              <option value="0.33">-0.33</option>
-              <option value="0.25">-0.25</option>
-            </select>
-          </div>
-        </div>
+        <!--spinner Start-->
+        <div
+          id="OperationStatus"
+          class="mt-3 w-100 text-center text-info-emphasis"
+        ></div>
       </div>
-      <div id="result_table_div">
-        <table class="table table-striped table-bordered">
-          <thead class="text-center">
-            <tr>
-              <th scope="col">Section</th>
-              <th scope="col">Total Questions</th>
-              <th scope="col">Correct</th>
-              <th scope="col">Wrong</th>
-              <th scope="col">Not Attempt</th>
-              <th scope="col">
-                Total Marks<br />
-                <i
-                  ><span class="text-success" id="span_correct_marks"
-                    >(+1)</span
+    </div>
+    <div id="Result_view" class="container-fluid shadow p-5 mt-3 mb-3" hidden>
+      <div class="DetailedAnalysis">
+        <h3 class="text-center">Detailed Analysis</h3>
+        <div class="marks_value_div row">
+          <p class="col-12 text-info-emphasis">
+            *you can change marks for each questions
+          </p>
+          <div class="col-6">
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="inputGroupSelect01"
+                >Marks for each &nbsp;<b class="text-success">Correct</b>&nbsp;
+                attempt</label
+              >
+              <select class="form-select" id="input_marks_correct">
+                <option selected value="0">Choose...</option>
+                <option value="1">+1</option>
+                <option value="2">+2</option>
+                <option value="3">+3</option>
+                <option value="4">+4</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="inputGroupSelect02"
+                >Marks for each &nbsp;<b class="text-danger">Wrong</b>&nbsp;
+                attempt</label
+              >
+              <select class="form-select" id="input_marks_wrong">
+                <option selected value="0">Choose...</option>
+                <option value="1">-1</option>
+                <option value="0.5">-0.5</option>
+                <option value="0.33">-0.33</option>
+                <option value="0.25">-0.25</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div id="result_table_div">
+          <table id="result_table" class="table table-striped table-bordered">
+            <thead class="text-center">
+              <tr>
+                <th scope="col">Section</th>
+                <th scope="col">Total Questions</th>
+                <th scope="col">Correct</th>
+                <th scope="col">Wrong</th>
+                <th scope="col">Not Attempt</th>
+                <th scope="col">
+                  Total Marks<br />
+                  <i
+                    ><span class="text-success" id="span_correct_marks"
+                      >(+1)</span
+                    >
+                    <span class="text-danger" id="span_wrong_marks"
+                      >(-0.33)</span
+                    ></i
                   >
-                  <span class="text-danger" id="span_wrong_marks"
-                    >(-0.33)</span
-                  ></i
-                >
-              </th>
-            </tr>
-          </thead>
-          <tbody class="table-group-divider">
-            <!-- <tr>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+              <!-- <tr>
                     <td>Section 1</td>
                     <td>10</td>
                     <td>5</td>
@@ -134,63 +219,151 @@
                     <td>15</td>
                     <td>15</td>
                 </tr> -->
-          </tbody>
-          <tfoot></tfoot>
-        </table>
+            </tbody>
+            <tfoot></tfoot>
+          </table>
+        </div>
+        <div
+          hidden
+          class=""
+          style="
+            display: flex;
+            align-content: center;
+            justify-content: space-evenly;
+            align-items: stretch;
+          "
+        >
+          <h4>Click to view all correct/worng/unattempted questions :</h4>
+          <button
+            type="button"
+            class="btn btn-dark"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            data-bs-whatever="all"
+          >
+            All
+          </button>
+          <button
+            type="button"
+            class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            data-bs-whatever="correct"
+          >
+            Correct
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            data-bs-whatever="wrong"
+          >
+            Wrong
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            data-bs-whatever="not_attempt"
+          >
+            Not Attempt
+          </button>
+        </div>
       </div>
-      <div
-        class=""
-        style="
-          display: flex;
-          align-content: center;
-          justify-content: space-evenly;
-          align-items: stretch;
-        "
-      >
-        <h4>Click to view all correct/worng/unattempted questions :</h4>
-        <button
-          type="button"
-          class="btn btn-success"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          data-bs-whatever="correct"
-        >
-          Correct
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          data-bs-whatever="wrong"
-        >
-          Wrong
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          data-bs-whatever="not_attempt"
-        >
-          Not Attempt
-        </button>
-      </div>
-      <!-- <nav>
+      <nav class="mt-3">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
-          <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
-          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
-          <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false" disabled>Disabled</button>
+          <button
+            class="nav-link active"
+            id="nav-all-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-all"
+            type="button"
+            role="tab"
+            aria-controls="nav-all"
+            aria-selected="true"
+          >
+            All&nbsp;<i></i>
+          </button>
+          <button
+            class="nav-link"
+            id="nav-correct-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-correct"
+            type="button"
+            role="tab"
+            aria-controls="nav-correct"
+            aria-selected="false"
+          >
+            Correct&nbsp;<i></i>
+          </button>
+          <button
+            class="nav-link"
+            id="nav-wrong-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-wrong"
+            type="button"
+            role="tab"
+            aria-controls="nav-wrong"
+            aria-selected="false"
+          >
+            Wrong&nbsp;<i></i>
+          </button>
+          <button
+            class="nav-link"
+            id="nav-not_attempt-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-not_attempt"
+            type="button"
+            role="tab"
+            aria-controls="nav-not_attempt"
+            aria-selected="false"
+          >
+            Not Attempt&nbsp;<i></i>
+          </button>
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">...</div>
-        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">...</div>
-        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">...</div>
-        <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">...</div>
-      </div> -->
+        <div
+          class="tab-pane fade show active"
+          id="nav-all"
+          role="tabpanel"
+          aria-labelledby="nav-home-tab"
+          tabindex="0"
+        >
+          ...
+        </div>
+        <div
+          class="tab-pane fade"
+          id="nav-correct"
+          role="tabpanel"
+          aria-labelledby="nav-profile-tab"
+          tabindex="0"
+        >
+          ...
+        </div>
+        <div
+          class="tab-pane fade"
+          id="nav-wrong"
+          role="tabpanel"
+          aria-labelledby="nav-contact-tab"
+          tabindex="0"
+        >
+          ...
+        </div>
+        <div
+          class="tab-pane fade"
+          id="nav-not_attempt"
+          role="tabpanel"
+          aria-labelledby="nav-disabled-tab"
+          tabindex="0"
+        >
+          ...
+        </div>
+      </div>
     </div>
+    <!-- Modal Start -->
     <div
       class="modal fade"
       id="exampleModal"
@@ -224,46 +397,48 @@
         </div>
       </div>
     </div>
+    <!-- Modal End -->
+    <!-- Proccesed Answerkey Start -->
     <div id="content"></div>
+    <!-- Proccesed Answerkey End -->
+    <!-- Raw Answer Key View Start -->
     <div id="ans_key_view" class="container-fluid" hidden></div>
-    <!-- <iframe
-      src=""
-      frameborder="0"
-      style="width: 100%; height: auto"
-      id="ans_key_view"
-    ></iframe> -->
+    <!-- Raw Answer Key View End -->
+
     <script type="text/javascript">
       var BoardDomain = "";
       var KeyData = "";
       var tbl_Question = [];
+      var FinalResult = [];
+      var StudentData = [];
       /*
-      Question_table = [{
-      section:"Section1",
-      question_number:1,
-      question_text:"Q1",
-      option1:"A1",
-      option2:"A2",
-      option3:"A3",
-      option4:"A4",
-      answer:"option1",
-      choosen_option:"option2",
-      sts:2(0=not_attempt,1=correct,2=wrong),
-      //correct_marks:1,
-      //wrong_marks:0.33
-      },{...}]
+            Question_table = [{
+            section:"Section1",
+            question_number:1,
+            question_text:"Q1",
+            option1:"A1",
+            option2:"A2",
+            option3:"A3",
+            option4:"A4",
+            answer:"option1",
+            choosen_option:"option2",
+            sts:2(0=not_attempt,1=correct,2=wrong),
+            //correct_marks:1,
+            //wrong_marks:0.33
+            },{...}]
 
-      Question_table = [{
-      section:"Section1",
-      question_number:1,
-      question_text:"Q1",
-      options:["A1", "A2", "A3", "A4"],
-      answer:"0",
-      choosen_option:"1",
-      sts:2(0=not_attempt,1=correct,2=wrong),
-      //correct_marks:1,
-      //wrong_marks:0.33
-      },{...}]
-      */
+            Question_table = [{
+            section:"Section1",
+            question_number:1,
+            question_text:"Q1",
+            options:["A1", "A2", "A3", "A4"],
+            answer:"0",
+            choosen_option:"1",
+            sts:2(0=not_attempt,1=correct,2=wrong),
+            //correct_marks:1,
+            //wrong_marks:0.33
+            },{...}]
+            */
       var Q_status = ["not_attempt", "correct", "wrong"];
       var Q_status_color = {
         not_attempt: "bg-light",
@@ -276,7 +451,7 @@
         wrong: "Wrong",
       };
       var Q_status_tooltip = {
-        not_attempt: "Question not attempted yet.",
+        not_attempt: "Question not attempted.",
         correct: "You answered correctly.",
         wrong: "You answered incorrectly.",
       };
@@ -424,49 +599,44 @@
         if (isLocalhost) {
           $("#selectServer_div").show();
           $("#inputAnskeyLink").val(
-            "https://ssc.digialm.com//per/g27/pub/32874/touchstone/AssessmentQPHTMLMode1//32874O2470/32874O2470S57D154965/17321958678562028/4410088737_32874O2470S57D154965E1.html#"
+            "https://rrb.digialm.com//per/g22/pub/1907/touchstone/AssessmentQPHTMLMode1//1907O245/1907O245S7D15730/17389042116883841/223242230960245_1907O245S7D15730E1.html#"
           );
+          //"https://ssc.digialm.com//per/g27/pub/32874/touchstone/AssessmentQPHTMLMode1//32874O2470/32874O2470S57D154965/17321958678562028/4410088737_32874O2470S57D154965E1.html#"
           //"https://rrb.digialm.com///per/g22/pub/2667/touchstone/AssessmentQPHTMLMode1//2667O248/2667O248S1D2414/17347860496592268/222242230410595_2667O248S1D2414E1.html"
         } else {
           $("#selectServer_div").hide();
         }
+        $(".spinner").hide();
         $("#resultAnalyzerForm").on("submit", async function (e) {
           e.preventDefault();
+          ResetDom();
           var ans_key_url = $("#inputAnskeyLink").val();
           var selectServer = isLocalhost
             ? $("#selectServer").find(":selected").val()
             : "https://netlifyproxysb.netlify.app";
           ans_key_url = ans_key_url.split(".html"); // from submitting single ansswer key url
           ans_key_url = ans_key_url[0] + ".html";
-          console.log(
-            `${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`
-          );
+          //console.log(`${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`);
           if (ans_key_url.trim() == "") {
             alert("Please enter answer key url!");
             return;
           }
           BoardDomain = ans_key_url.split("/per")[0];
-          console.log(BoardDomain);
-          /* console.log("iframe loaded starting...");
-                   $("#ans_key_view").attr("src", ans_key_url);
-              $("#ans_key_view").load(
-                        ans_key_url,
-                        await function () {
-                          console.log("iframe loaded");
-                          console.log($("#ans_key_view").html());
-                          analize_data(BoardDomain, $("#ans_key_view ").html());
-                        }
-                      );
-                console.log("iframe loaded");*/
+          //console.log(BoardDomain);
 
           $("#btnAnskeyLinkSubmit").attr("disabled", true);
           $("#btnAnskeyLinkSubmit").html("getting data...");
-          await fetch(
-            `${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`
-          ) //https://netlifyproxysb.netlify.app
+          $("#OperationStatus").html("getting data...");
+
+          $(".spinner").fadeIn();
+          let FetchUrl = `${selectServer}/proxy?url=${encodeURIComponent(
+            ans_key_url
+          )}`;
+          await fetch(FetchUrl) //https://netlifyproxysb.netlify.app
             .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
+            .then(async (data) => {
+              $("#OperationStatus").html("Data successfully received.");
+              //console.log(data);
               $("#btnAnskeyLinkSubmit").attr("disabled", false);
               //console.log(response);
               //keydataresponse = response; // JSON.parse(response);
@@ -474,8 +644,8 @@
               //console.log(keydataresponse);
               if (data.ressts.trim() == "data-received") {
                 KeyData = data.resdata;
-                ExtractData();
-                analize_data(); //BoardDomain, data.resdata
+                await ExtractData();
+                await analize_data(); //BoardDomain, data.resdata
               } else {
                 console.log(data.ressts);
                 $("#btnAnskeyLinkSubmit").html("Try Again!");
@@ -485,45 +655,16 @@
               $("#btnAnskeyLinkSubmit").html("Try Again! 😕");
               $("#btnAnskeyLinkSubmit").attr("disabled", false);
               console.log(error);
+            })
+            .finally(() => {
+              $(".spinner").fadeOut();
+              $("#OperationStatus").html("");
             });
-          console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-
-          /*$.ajax({
-                              type: "GET",
-                              url: `https://netlifyproxysb.netlify.app/proxy?url=${encodeURIComponent(
-                                ans_key_url
-                              )}`, //"https://resultanalizer.netlify.app/.netlify/functions/api/fetch-page", //"http://localhost:3001/fetch-page",
-                              data: {}, //ans_key_url: ans_key_url
-                              async: true,
-                              cache: false,
-                              /*headers: {
-                                "Content-Type": "application/json",
-                                "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-                              },*/
-          /*beforeSend: function () {
-                                $("#btnAnskeyLinkSubmit").val("getting data...");
-                              },
-                              success: function (response) {
-                                $("#btnAnskeyLinkSubmit").attr("disabled", false);
-                                //console.log(response);
-                                //keydataresponse = response; // JSON.parse(response);
-                                $("#btnAnskeyLinkSubmit").val("Submit");
-                                //console.log(keydataresponse);
-                                if (response.ressts.trim() == "data-received") {
-                                  analize_data(BoardDomain, response.resdata);
-                                } else {
-                                  console.log(response.ressts);
-                                  $("#btnAnskeyLinkSubmit").val("Try Again!");
-                                }
-                              },
-                              error: function () {
-                                $("#btnAnskeyLinkSubmit").val("Try Again! 😕");
-                                $("#btnAnskeyLinkSubmit").attr("disabled", false);
-                              },
-                            });*/
+          //console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         });
       });
       function ExtractData() {
+        $("#OperationStatus").html("Extracting data...");
         if (BoardDomain == "" || KeyData == "") {
           alert("Data not found");
           return;
@@ -550,16 +691,19 @@
           };
           stddata.value != "" && StudentData.push(stddata);
         });
-        console.log(StudentData);
+        //console.log(StudentData);
 
         //Extract Question Data from Answer Key
-        $("#ans_key_view .section-cntnr").each(function (j, section_cntnr) {
+        $("#ans_key_view .section-cntnr").each(function (
+          section_Index,
+          section_cntnr
+        ) {
+          let Section_ID = `S_${section_Index + 1}`;
           $(section_cntnr)
             .find(".question-pnl")
-            .each(function (i, question_pnl) {
-              let QuestionNo = i + 1;
+            .each(function (question_Index, question_pnl) {
               var Q_tbody = $(question_pnl).find(".questionRowTbl>tbody");
-              var ChosenOption = $(section_cntnr)
+              var ChosenOption = $(question_pnl)
                 .find(".menu-tbl tbody")
                 .children()
                 .last()
@@ -570,54 +714,82 @@
               var CorrectOption =
                 Q_tbody.children().find("td.rightAns").parent().index() - 2;
 
+              var Option1 = Q_tbody.children().eq(3).children().eq(1);
+              var Option2 = Q_tbody.children().eq(4).children().eq(1);
+              var Option3 = Q_tbody.children().eq(5).children().eq(1);
+              var Option4 = Q_tbody.children().eq(6).children().eq(1);
+              var Option5 = Q_tbody.children().eq(7)?.children().eq(1);
+
               var sts_temp = "";
               if (ChosenOption == "--") {
                 sts_temp = Q_status[0];
+                Q_tbody.addClass("not_attempt")
+                  .parent()
+                  .addClass("Q_not_attempt");
               } else {
                 var intoption = parseInt(ChosenOption);
+                // console.log("Chosen Option -> " +intoption + " | %c " + (CorrectOption == intoption ? " ✓ " : " ✕ "), "color:" + (CorrectOption == intoption ? "green;" : "red;"));
                 if (CorrectOption == intoption) {
                   sts_temp = Q_status[1];
+                  Q_tbody.css("background", "rgba(0,255,0,0.2)");
+                  Q_tbody.addClass("correct").parent().addClass("Q_correct");
                 } else {
                   sts_temp = Q_status[2];
+                  Q_tbody.css("background", "rgba(255,0,0,0.2)");
+                  Q_tbody.addClass("wrong").parent().addClass("Q_wrong");
                 }
+                Q_tbody.find("tr")
+                  .eq(intoption + 2)
+                  .children()
+                  .eq(1)
+                  .css(
+                    "border",
+                    "2px solid " +
+                      (CorrectOption == intoption ? "green" : "red")
+                  )
+                  .css("position", "relative")
+                  .append(
+                    `<span style="position: absolute;top: 0;right: 0;font-size: small;box-shadow: 0 0.5rem 1rem 2px rgba(0, 0, 0, 0.15);background: rgb(255 255 255 / 60%);padding: 2px 8px;"">Choosen Option</span>`
+                  );
               }
+
               var Qs = {
+                section_id: Section_ID,
                 section: $(section_cntnr)
                   .find(".section-lbl>span")
                   .last()
                   .text(),
+                question_id: `${Section_ID}_Q_${question_Index + 1}`,
                 question_number: Q_tbody.children()
                   .eq(1)
                   .children()
                   .eq(0)
                   .text(),
                 question_text: Q_tbody.children().eq(1).children().eq(1).html(),
-                option1: Q_tbody.children().eq(3).children().eq(1).html(),
-                option2: Q_tbody.children().eq(4).children().eq(1).html(),
-                option3: Q_tbody.children().eq(5).children().eq(1).html(),
-                option4: Q_tbody.children().eq(6).children().eq(1).html(),
-                option5: Q_tbody.children().eq(7)?.children().eq(1).html(),
+                option1: Option1.html(),
+                option2: Option2.html(),
+                option3: Option3.html(),
+                option4: Option4.html(),
+                option5: Option5.html(),
                 answer:
                   "option" +
-                  (Question.children().find("td.rightAns").parent().index() -
-                    2),
+                  (Q_tbody.children().find("td.rightAns").parent().index() - 2),
                 choosen_option:
                   "option" + (ChosenOption == "--" ? "0" : ChosenOption),
                 sts: sts_temp, //(0=not_attempt,1=correct,2=wrong),
               };
+              //console.log(Qs);
               tbl_Question.push(Qs);
             });
-          console.log(tbl_Question);
+          //console.log(tbl_Question);
+          $("#OperationStatus").html("Data Extracted");
         });
       }
       function analize_data() {
-        if (BoardDomain == "" || KeyData == "") {
-          alert("Data not found");
+        if (!tbl_Question.length) {
           return;
         }
-        //BoardDomain, KeyData
-        var FinalResult = [];
-        var StudentData = [];
+        $("#OperationStatus").html("Analizing data...");
         var marks_correct = 0;
         var marks_wrong = 0;
         if (BoardDomain.includes("rrb")) {
@@ -644,218 +816,102 @@
         $("#span_correct_marks").html("(+" + marks_correct + ")");
         $("#span_wrong_marks").html("(-" + marks_wrong + ")");
 
-        var dom_parser = new DOMParser();
-        dom_parser = dom_parser.parseFromString(KeyData, "text/html");
-        $("#ans_key_view").html(
-          KeyData.replaceAll('src="/per', 'src="' + BoardDomain + "//per")
-        );
-
-        $(".print-pnl").hide();
         //$("#ans_key_view").attr("hidden", false);
         $("#Result_view").attr("hidden", false);
-        $("#Result_view tbody").children().remove();
-        $("#Result_view tfoot").children().remove();
-
-        $(".wrapper .main-info-pnl tr").each(function (i, maininfo) {
-          var stddata = {
-            key: $(this).children().first().text(),
-            value: $(this).children().last().text(),
-          };
-          stddata.value != "" && StudentData.push(stddata);
-        });
-        console.log(StudentData);
+        $("#result_table tbody").children().remove();
+        $("#result_table tfoot").children().remove();
 
         $(".main-info-pnl table").width("100%");
-        $("#ans_key_view .section-cntnr").each(function (j, sec) {
+
+        var DistinctSections = tbl_Question
+          .map((x) => x.section)
+          .filter((value, index, self) => self.indexOf(value) === index);
+
+        DistinctSections.forEach((section) => {
           let SectionFinalResult = {
             section: "",
+            all_questions: [],
             correct: [],
             wrong: [],
             not_attempt: [],
+            total_marks: 0,
           };
-          SectionFinalResult.section = $(sec)
-            .find(".section-lbl>span")
-            .last()
-            .text();
-          //console.log(SectionFinalResult.section);
-          $(sec)
-            .find(".question-pnl")
-            .each(function (i, ques) {
-              let QuestionNo = i + 1;
-              var Question = $(ques).find(".questionRowTbl>tbody");
-              var ChosenOption = $(this)
-                .find(".menu-tbl tbody")
-                .children()
-                .last()
-                .children()
-                .last()
-                .text()
-                .trim();
-              var CorrectOption =
-                Question.children().find("td.rightAns").parent().index() - 2;
-
-              //console.log(QuestionNo + ") " + "Correct Option -> " + CorrectOption);
-              Question.find("tr").eq(1).children().eq(1).css("width", "auto");
-              Question.find("tr").eq(1).children().eq(2).css("display", "none");
-              Question.parent().css("background", "rgba(255,255,255,1)");
-
-              var sts_temp = Q_status[0];
-              if (ChosenOption == "--") {
-                SectionFinalResult.not_attempt.push(QuestionNo);
-                //console.log(" Chosen Option -> " + "--");
-                $(this).addClass("not_attempt");
-                Question.parent().addClass("Q_not_attempt");
-              } else {
-                var intoption = parseInt(ChosenOption);
-                //console.log({CorrectOption,intoption});
-                // console.log("Chosen Option -> " +intoption + " | %c " + (CorrectOption == intoption ? " ✓ " : " ✕ "), "color:" + (CorrectOption == intoption ? "green;" : "red;"));
-                if (CorrectOption == intoption) {
-                  //console.log(" ✓ ");
-                  sts_temp = Q_status[1];
-                  SectionFinalResult.correct.push(QuestionNo);
-                } else {
-                  //console.log(" ✕ ");
-                  sts_temp = Q_status[2];
-                  SectionFinalResult.wrong.push(QuestionNo);
-                }
-
-                Question.parent().css(
-                  "background",
-                  CorrectOption == intoption
-                    ? "rgba(0,255,0,0.2)"
-                    : "rgba(255,0,0,0.2)"
-                );
-                $(this).addClass(
-                  CorrectOption == intoption ? "correct" : "wrong"
-                );
-                Question.parent().addClass(
-                  CorrectOption == intoption ? "Q_correct" : "Q_wrong"
-                );
-
-                Question.find("tr")
-                  .eq(intoption + 2)
-                  .children()
-                  .eq(1)
-                  .css(
-                    "border",
-                    "2px solid " +
-                      (CorrectOption == intoption ? "green" : "red")
-                  )
-                  .css("position", "relative");
-                Question.find("tr")
-                  .eq(intoption + 2)
-                  .children()
-                  .eq(1)
-                  .append(
-                    "<span style='position: absolute;top: 0;right: 0;font-size: smaller;box-shadow: 0 0.5rem 1rem 2px rgba(0, 0, 0, 0.15);background: rgb(255 255 255 / 44%);padding: 2px 8px;'>Choosen Option</span>"
-                  );
+          SectionFinalResult.section = section;
+          tbl_Question.forEach((question) => {
+            if (question.section === section) {
+              SectionFinalResult.all_questions.push(question.question_number);
+              if (question.sts === Q_status[0]) {
+                SectionFinalResult.not_attempt.push(question.question_number);
+              } else if (question.sts === Q_status[1]) {
+                SectionFinalResult.correct.push(question.question_number);
+              } else if (question.sts === Q_status[2]) {
+                SectionFinalResult.wrong.push(question.question_number);
               }
-
-              var Qs = {
-                section: $(sec).find(".section-lbl>span").last().text(),
-                question_number: Question.children()
-                  .eq(1)
-                  .children()
-                  .eq(0)
-                  .text(),
-                question_text: Question.children()
-                  .eq(1)
-                  .children()
-                  .eq(1)
-                  .html(),
-                option1: Question.children().eq(3).children().eq(1).html(),
-                option2: Question.children().eq(4).children().eq(1).html(),
-                option3: Question.children().eq(5).children().eq(1).html(),
-                option4: Question.children().eq(6).children().eq(1).html(),
-                option5: Question.children().eq(7)?.children().eq(1).html(),
-                answer:
-                  "option" +
-                  (Question.children().find("td.rightAns").parent().index() -
-                    2),
-                choosen_option:
-                  "option" + (ChosenOption == "--" ? "0" : ChosenOption),
-                sts: sts_temp, //(0=not_attempt,1=correct,2=wrong),
-              };
-              //tbl_Question.push(Qs);
-            });
-          var t =
-            SectionFinalResult.correct.length +
-            SectionFinalResult.wrong.length +
-            SectionFinalResult.not_attempt.length;
-          //console.log("Total= " +t +" | ✓ " +SectionFinalResult.correct.length +" | ✕ " +SectionFinalResult.wrong.length +" | -- " +SectionFinalResult.not_attempt.length);
-          //console.log(SectionFinalResult);
-          $(sec)
-            .find(".section-lbl>span")
-            .last()
-            .append(
-              "<i> >⁜> Total= " +
-                t +
-                " | <b class='text-success'>(✓) ->" +
-                SectionFinalResult.correct.length +
-                "</b> | <b class='text-danger'>(✕) ->" +
-                SectionFinalResult.wrong.length +
-                "</b> | (--) ->" +
-                SectionFinalResult.not_attempt.length +
-                "</i>"
-            );
+            }
+          });
+          SectionFinalResult.total_marks +=
+            SectionFinalResult.correct.length * marks_correct +
+            SectionFinalResult.wrong.length * marks_wrong;
           FinalResult.push(SectionFinalResult);
         });
+        //console.log(FinalResult);
 
-        var total_correct = 0;
-        var total_wrong = 0;
-        var total_not_attempt = 0;
-        var total_overall = 0;
-        var total_marks = 0;
+        var FinalMarks = {
+          total_correct: 0,
+          total_wrong: 0,
+          total_not_attempt: 0,
+          total_overall: 0,
+          total_marks: 0,
+        };
+
         FinalResult.forEach((sec) => {
-          total_correct += sec.correct.length;
-          total_wrong += sec.wrong.length;
-          total_not_attempt += sec.not_attempt.length;
-          total_overall +=
+          FinalMarks.total_correct += sec.correct.length;
+          FinalMarks.total_wrong += sec.wrong.length;
+          FinalMarks.total_not_attempt += sec.not_attempt.length;
+          FinalMarks.total_overall +=
             sec.not_attempt.length + sec.wrong.length + sec.correct.length;
           let temp_totalmarks = (
             sec.correct.length * marks_correct -
             sec.wrong.length * marks_wrong
           ).toFixed(2);
-          total_marks = (
-            parseFloat(total_marks) + parseFloat(temp_totalmarks)
-          ).toFixed(2);
-          $("#Result_view tbody")
-            .append(
-              "<tr><th class='sect' scope='row'>" +
-                sec.section +
-                "</th><td class='sect_total'>" +
-                (sec.not_attempt.length +
-                  sec.wrong.length +
-                  sec.correct.length) +
-                "</td><td class='sect_correct text-success'>" +
-                sec.correct.length +
-                "</td><td class='sect_wrong text-danger'>" +
-                sec.wrong.length +
-                "</td><td class='sect_not_attempt'>" +
-                sec.not_attempt.length +
-                "</td>" +
-                "</td><td class='sect_totalMarks'>" +
-                temp_totalmarks +
-                "</td></tr>"
-            )
-            .fadeIn("slow");
-        });
-        $("#Result_view tfoot")
-          .append(
-            "<tr><th scope='row'>Total</th><td class='total_overall'>" +
-              total_overall +
-              "</td><td class='total_correct text-success'>" +
-              total_correct +
-              "</td><td class='total_wrong text-danger'>" +
-              total_wrong +
-              "</td><td class='total_not_attempt'>" +
-              total_not_attempt +
+
+          $("#result_table tbody").append(
+            "<tr><th class='sect' scope='row'>" +
+              sec.section +
+              "</th><td class='sect_total'>" +
+              (sec.not_attempt.length + sec.wrong.length + sec.correct.length) +
+              "</td><td class='sect_correct text-success'>" +
+              sec.correct.length +
+              "</td><td class='sect_wrong text-danger'>" +
+              sec.wrong.length +
+              "</td><td class='sect_not_attempt'>" +
+              sec.not_attempt.length +
               "</td>" +
-              "</td><td class='total_Marks'>" +
-              total_marks +
+              "</td><td class='sect_totalMarks'>" +
+              temp_totalmarks +
               "</td></tr>"
-          )
-          .fadeIn("slow");
+          );
+
+          FinalMarks.total_marks = (
+            parseFloat(FinalMarks.total_marks) + parseFloat(temp_totalmarks)
+          ).toFixed(2);
+        });
+
+        $("#result_table tfoot").append(
+          "<tr><th scope='row'>Total</th><td class='total_overall'>" +
+            FinalMarks.total_overall +
+            "</td><td class='total_correct text-success'>" +
+            FinalMarks.total_correct +
+            "</td><td class='total_wrong text-danger'>" +
+            FinalMarks.total_wrong +
+            "</td><td class='total_not_attempt'>" +
+            FinalMarks.total_not_attempt +
+            "</td>" +
+            "</td><td class='total_Marks text-bg-success'>" +
+            FinalMarks.total_marks +
+            "</td></tr>"
+        );
+
         //console.log(FinalResult);
 
         const exampleModal = document.getElementById("exampleModal");
@@ -870,19 +926,19 @@
             //var QuestionLIST = "";
             let recipientCounter = 0;
             /*$(".section-cntnr")
-              .find(".questionRowTbl.Q_" + recipient)
-              .each((i, e) => {
-                //QuestionLIST += "<table>" + e.innerHTML + "</table>";
-                recipientCounter++;
-                $("#exampleModal .modal-body")
-                  .append(
-                    "<table style='margin-bottom: 1em;border: 2px groove black;'>" +
-                      e.innerHTML +
-                      "</table>"
-                  )
-                  .fadeIn("slow");
-                //console.log(e);
-              });*/
+                    .find(".questionRowTbl.Q_" + recipient)
+                    .each((i, e) => {
+                      //QuestionLIST += "<table>" + e.innerHTML + "</table>";
+                      recipientCounter++;
+                      $("#exampleModal .modal-body")
+                        .append(
+                          "<table style='margin-bottom: 1em;border: 2px groove black;'>" +
+                            e.innerHTML +
+                            "</table>"
+                        )
+                        .fadeIn("slow");
+                      //console.log(e);
+                    });*/
             //var List_temp = getQuestionList("all", recipient);
             $("#exampleModal .modal-body")
               .empty()
@@ -893,13 +949,28 @@
                 ? "Correct"
                 : recipient == "wrong"
                 ? "Wrong"
-                : "Unattempted";
+                : recipient == "not_attempt"
+                ? "Unattempted"
+                : "";
             modalTitle.textContent = `Showing all ${ModalHeadingText} questions `; //(total - ${List_temp.Count})
             //console.log(QuestionLIST);
             //$("#exampleModal .modal-body").append(QuestionLIST);
           });
         }
-        $("#content").append(getSectionWiseQuestions("all", Q_status[1])); //"all"
+        //$("#content").append(getSectionWiseQuestions("all", Q_status[1])); //"all"
+        $("#nav-all").empty().append(getSectionWiseQuestions("all", "all"));
+        Q_status.forEach((e) => {
+          $("#nav-" + e)
+            .empty()
+            .append(getSectionWiseQuestions("all", e));
+        });
+        $("#nav-all-tab i").html(FinalMarks.total_overall).fadeIn("slow");
+        $("#nav-correct-tab i").html(FinalMarks.total_correct).fadeIn("slow");
+        $("#nav-wrong-tab i").html(FinalMarks.total_wrong).fadeIn("slow");
+        $("#nav-not_attempt-tab i")
+          .html(FinalMarks.total_not_attempt)
+          .fadeIn("slow");
+        $("#OperationStatus").html("Data Analized");
       }
 
       function getQuestionList(Qstatus) {
@@ -911,72 +982,16 @@
           );
         }
         tbl_Question_Filter.forEach((e, i) => {
-          QuestionLIST +=
-            "<div class='card m-2 QuestionCard " +
-            String(e.question_number).replace(".", "_") +
-            "'>" +
-            "<div class='card-header'><i>" +
-            e.question_number +
-            ")</i>&nbsp;<p class='card-text'>" +
-            e.question_text +
-            "</p></div>" +
-            "<div class='card-body'>" +
-            "<ul class='list-group'>" +
-            "<li class='list-group-item " +
-            (e.answer == "option1"
-              ? "list-group-item-success"
-              : "list-group-item-danger") +
-            "'>" +
-            e.option1 +
-            "</li>" +
-            "<li class='list-group-item " +
-            (e.answer == "option2"
-              ? "list-group-item-success"
-              : "list-group-item-danger") +
-            "'>" +
-            e.option2 +
-            "</li>" +
-            "<li class='list-group-item " +
-            (e.answer == "option3"
-              ? "list-group-item-success"
-              : "list-group-item-danger") +
-            "'>" +
-            e.option3 +
-            "</li>" +
-            "<li class='list-group-item " +
-            (e.answer == "option4"
-              ? "list-group-item-success"
-              : "list-group-item-danger") +
-            "'>" +
-            e.option4 +
-            "</li>" +
-            (e.option5 != undefined
-              ? "<li class='list-group-item " +
-                (e.answer == "option5"
-                  ? "list-group-item-success"
-                  : "list-group-item-danger") +
-                "'>" +
-                e.option5 +
-                "</li>"
-              : "") +
-            "<li class='list-group-item d-flex align-items-center justify-content-between text-dark-emphasis'>" +
-            "<span><b>Correct Option:&nbsp;<u>" +
-            e.answer +
-            "</u></b></span>" +
-            "<span><b>Choosen Option:&nbsp;<u>" +
-            (e.choosen_option != "option0" ? e.choosen_option : "--") +
-            "</u></b></span>" +
-            "</li>" +
-            "</ul>" +
-            "</div>" +
-            "</div>";
+          QuestionLIST += decorateQuestion(e);
         });
         return {
           QuestionsHtml: QuestionLIST,
           Count: tbl_Question_Filter.length,
         };
       }
+
       function getSectionWiseQuestions(Section, Qstatus) {
+        $("#OperationStatus").html("Geting section wise questions");
         var sections = [];
         var sections_filter = tbl_Question;
         if (Section != "all") {
@@ -993,79 +1008,155 @@
         for (var sec in sections) {
           var Sec_Question_Filter = sections[sec];
           if (Qstatus != "all") {
-            Sec_Question_Filter = sections[sec].filter((e) => e.sts == Qstatus);
+            Sec_Question_Filter = Sec_Question_Filter.filter(
+              (e) => e.sts == Qstatus
+            );
           }
-          console.log(Sec_Question_Filter);
+          //console.log(Sec_Question_Filter.filter((e) => e.sts == Qstatus));
           section_wise_questions +=
-            "<div class='card mb-5'>" +
+            "<div class='card m-1 mb-5'>" +
             "<h5 class='card-header text-center text-bg-secondary'>" +
             sec +
             "</h5>" +
-            "<div class='card-body'>";
+            "<div class='card-body p-0'>";
           Sec_Question_Filter.forEach((e) => {
-            section_wise_questions +=
-              "<div class='card m-2 QuestionCard " +
-              String(e.question_number).replace(".", "_") +
-              "'>" +
-              "<div class='card-header'><i>" +
-              e.question_number +
-              ")</i>&nbsp;<p class='card-text'>" +
-              e.question_text +
-              "</p></div>" +
-              "<div class='card-body'>" +
-              "<ul class='list-group'>" +
-              "<li class='list-group-item " +
-              (e.answer == "option1"
-                ? "list-group-item-success"
-                : "list-group-item-danger") +
-              "'>" +
-              e.option1 +
-              "</li>" +
-              "<li class='list-group-item " +
-              (e.answer == "option2"
-                ? "list-group-item-success"
-                : "list-group-item-danger") +
-              "'>" +
-              e.option2 +
-              "</li>" +
-              "<li class='list-group-item " +
-              (e.answer == "option3"
-                ? "list-group-item-success"
-                : "list-group-item-danger") +
-              "'>" +
-              e.option3 +
-              "</li>" +
-              "<li class='list-group-item " +
-              (e.answer == "option4"
-                ? "list-group-item-success"
-                : "list-group-item-danger") +
-              "'>" +
-              e.option4 +
-              "</li>" +
-              (e.option5 != undefined
-                ? "<li class='list-group-item " +
-                  (e.answer == "option5"
-                    ? "list-group-item-success"
-                    : "list-group-item-danger") +
-                  "'>" +
-                  e.option5 +
-                  "</li>"
-                : "") +
-              "<li class='list-group-item d-flex align-items-center justify-content-between text-dark-emphasis'>" +
-              "<span><b>Correct Option:&nbsp;<u>" +
-              e.answer +
-              "</u></b></span>" +
-              "<span><b>Choosen Option:&nbsp;<u>" +
-              (e.choosen_option != "option0" ? e.choosen_option : "--") +
-              "</u></b></span>" +
-              "</li>" +
-              "</ul>" +
-              "</div>" +
-              "</div>";
+            section_wise_questions += decorateQuestion(e);
+            /*"<div class='card m-2 QuestionCard " +
+                    String(e.question_number).replace(".", "_") +
+                    "'>" +
+                    "<div class='card-header'><i>" +
+                    e.question_number +
+                    ")</i>&nbsp;<p class='card-text'>" +
+                    e.question_text +
+                    "</p></div>" +
+                    "<div class='card-body'>" +
+                    "<ul class='list-group'>" +
+                    "<li class='list-group-item " +
+                    (e.answer == "option1"
+                      ? "list-group-item-success"
+                      : "list-group-item-danger") +
+                    "'>" +
+                    e.option1 +
+                    "</li>" +
+                    "<li class='list-group-item " +
+                    (e.answer == "option2"
+                      ? "list-group-item-success"
+                      : "list-group-item-danger") +
+                    "'>" +
+                    e.option2 +
+                    "</li>" +
+                    "<li class='list-group-item " +
+                    (e.answer == "option3"
+                      ? "list-group-item-success"
+                      : "list-group-item-danger") +
+                    "'>" +
+                    e.option3 +
+                    "</li>" +
+                    "<li class='list-group-item " +
+                    (e.answer == "option4"
+                      ? "list-group-item-success"
+                      : "list-group-item-danger") +
+                    "'>" +
+                    e.option4 +
+                    "</li>" +
+                    (e.option5 != undefined
+                      ? "<li class='list-group-item " +
+                        (e.answer == "option5"
+                          ? "list-group-item-success"
+                          : "list-group-item-danger") +
+                        "'>" +
+                        e.option5 +
+                        "</li>"
+                      : "") +
+                    "<li class='list-group-item d-flex align-items-center justify-content-between text-dark-emphasis'>" +
+                    "<span><b>Correct Option:&nbsp;<u>" +
+                    e.answer +
+                    "</u></b></span>" +
+                    "<span><b>Choosen Option:&nbsp;<u>" +
+                    (e.choosen_option != "option0" ? e.choosen_option : "--") +
+                    "</u></b></span>" +
+                    "</li>" +
+                    "</ul>" +
+                    "</div>" +
+                    "</div>";*/
           });
           section_wise_questions += "</div></div>";
         }
+        $("#OperationStatus").html("Sectionwise Questions Fetched!");
         return section_wise_questions;
+      }
+
+      function decorateQuestion(question) {
+        $("#OperationStatus").html("Decorating Questions");
+        var decoratedQuestion = `<div class="card m-1 QuestionCard ${String(
+          question.question_number
+        ).replace(".", "_")} ">
+          <div class="card-header">
+            <i>${question.question_number})</i>&nbsp;<p class="card-text">${
+          question.question_text
+        }</p>
+          </div>
+          <div class="card-body">
+          <ul class="list-group">
+          <li class="list-group-item ${
+            question.answer == "option1"
+              ? "list-group-item-success"
+              : "list-group-item-danger"
+          }">
+          ${question.option1}</li>
+          <li class="list-group-item ${
+            question.answer == "option2"
+              ? "list-group-item-success"
+              : "list-group-item-danger"
+          }">
+          ${question.option2}</li>
+          <li class="list-group-item ${
+            question.answer == "option3"
+              ? "list-group-item-success"
+              : "list-group-item-danger"
+          }">
+          ${question.option3}</li>
+          <li class="list-group-item ${
+            question.answer == "option4"
+              ? "list-group-item-success"
+              : "list-group-item-danger"
+          }">
+          ${question.option4}</li>
+          ${
+            question.option5 != undefined
+              ? `<li class="list-group-item ${
+                  question.answer == "option5"
+                    ? "list-group-item-success"
+                    : "list-group-item-danger"
+                }">
+                ${question.option5}</li>`
+              : ""
+          } 
+          <li class="list-group-item d-flex align-items-center justify-content-between text-dark-emphasis">
+          <span><b>Correct Option:&nbsp;<u>${question.answer}</u></b></span>
+          <span><b>Choosen Option:&nbsp;<u>${
+            question.choosen_option != "option0"
+              ? question.choosen_option
+              : "--"
+          }</u></b></span>
+          </li>
+          </ul>
+          </div>
+          </div>`;
+        $("#OperationStatus").html("Decorated");
+        return decoratedQuestion;
+      }
+
+      function ResetDom() {
+        $("#ans_key_view").attr("hidden", true).empty();
+        $("#Result_view").attr("hidden", true);
+        $("#result_table tbody").children().remove();
+        $("#result_table tfoot").children().remove();
+        $("#nav-all").empty();
+        Q_status.forEach((e) => {
+          $(`#nav-${e}`).empty();
+          $(`#nav-${e}-tab i`).html("0");
+        });
       }
     </script>
   </body>
