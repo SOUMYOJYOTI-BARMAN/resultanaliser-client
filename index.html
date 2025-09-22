@@ -651,11 +651,11 @@
                 $("#btnAnskeyLinkSubmit").html("Try Again!");
               }
             })
-            .catch(({ error, browserReq }) => {
+            .catch((error, browserReq) => {
               $("#btnAnskeyLinkSubmit").html("Try Again! 😕");
               $("#btnAnskeyLinkSubmit").attr("disabled", false);
               console.log(error);
-              console.log({ browserReq });
+              console.log(browserReq);
             })
             .finally(() => {
               $(".spinner").fadeOut();
@@ -1132,7 +1132,7 @@
                 }">
                 ${question.option5}</li>`
               : ""
-          } 
+          }
           <li class="list-group-item d-flex align-items-center justify-content-between text-dark-emphasis">
           <span><b>Correct Option:&nbsp;<u>${question.answer}</u></b></span>
           <span><b>Choosen Option:&nbsp;<u>${
