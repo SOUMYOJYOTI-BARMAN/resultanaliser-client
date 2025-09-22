@@ -651,11 +651,10 @@
                 $("#btnAnskeyLinkSubmit").html("Try Again!");
               }
             })
-            .catch((error, browserReq) => {
+            .catch((error) => {
               $("#btnAnskeyLinkSubmit").html("Try Again! 😕");
               $("#btnAnskeyLinkSubmit").attr("disabled", false);
               console.log(error);
-              console.log(browserReq);
             })
             .finally(() => {
               $(".spinner").fadeOut();
