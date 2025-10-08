@@ -650,7 +650,9 @@
                 $("#btnAnskeyLinkSubmit").attr("disabled", false);
               } else {
                 console.log({ Line: "Fetch Then Else", Problem: data.ressts });
-                $("#OperationStatus").html(`<pre>${data.resdata}</pre>`);
+                $("#OperationStatus").html(
+                  `<pre>${data.resdata ? data.resdata : data.error}</pre>`
+                );
                 $("#btnAnskeyLinkSubmit").html(`Please try Again!`);
               }
             })
