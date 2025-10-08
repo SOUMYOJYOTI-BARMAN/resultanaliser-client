@@ -648,7 +648,7 @@
                 await analize_data(); //BoardDomain, data.resdata
               } else {
                 console.log(data.ressts);
-                $("#OperationStatus").html = `<code>${data.resdata}</code>`;
+                $("#OperationStatus").html = `<pre>${data.resdata}</pre>`;
                 $("#btnAnskeyLinkSubmit").html("Try Again!");
               }
             })
