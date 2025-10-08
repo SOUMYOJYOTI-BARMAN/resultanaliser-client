@@ -636,7 +636,7 @@
             .then((response) => response.json())
             .then(async (data) => {
               $("#OperationStatus").html("Data successfully received.");
-              console.log({ Line: "Fetch Catch", data });
+              console.log({ Line: "Fetch Then", data });
               $("#btnAnskeyLinkSubmit").attr("disabled", false);
               //console.log(response);
               //keydataresponse = response; // JSON.parse(response);
@@ -649,7 +649,7 @@
                 await analize_data(); //BoardDomain, data.resdata
                 $("#btnAnskeyLinkSubmit").attr("disabled", false);
               } else {
-                console.log({ Line: "Fetch Catch", Problem: data.ressts });
+                console.log({ Line: "Fetch Then Else", Problem: data.ressts });
                 $("#OperationStatus").html(`<pre>${data.resdata}</pre>`);
                 $("#btnAnskeyLinkSubmit").html(`Please try Again!`);
               }
