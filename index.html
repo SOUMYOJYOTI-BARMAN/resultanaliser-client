@@ -636,8 +636,7 @@
             .then((response) => response.json())
             .then(async (data) => {
               $("#OperationStatus").html("Data successfully received.");
-              //console.log(data);
-              $("#OperationStatus").html(data.resdata);
+              console.log(data);
               $("#btnAnskeyLinkSubmit").attr("disabled", false);
               //console.log(response);
               //keydataresponse = response; // JSON.parse(response);
