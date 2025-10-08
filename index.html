@@ -636,29 +636,31 @@
             .then((response) => response.json())
             .then(async (data) => {
               $("#OperationStatus").html("Data successfully received.");
-              console.log(data);
+              console.log({ Line: "Fetch Catch", data });
               $("#btnAnskeyLinkSubmit").attr("disabled", false);
               //console.log(response);
               //keydataresponse = response; // JSON.parse(response);
               $("#btnAnskeyLinkSubmit").html("Submit");
               //console.log(keydataresponse);
               if (data.ressts.trim() == "data-received") {
+                $("#btnAnskeyLinkSubmit").attr("disabled", true);
                 KeyData = data.resdata;
                 await ExtractData();
                 await analize_data(); //BoardDomain, data.resdata
+                $("#btnAnskeyLinkSubmit").attr("disabled", false);
               } else {
-                console.log(data.ressts);
+                console.log({ Line: "Fetch Catch", Problem: data.ressts });
                 $("#OperationStatus").html(`<pre>${data.resdata}</pre>`);
-                $("#btnAnskeyLinkSubmit").html("Try Again!");
+                $("#btnAnskeyLinkSubmit").html(`Please try Again!`);
               }
             })
             .catch((error) => {
               $("#btnAnskeyLinkSubmit").html("Try Again! 😕");
-              $("#btnAnskeyLinkSubmit").attr("disabled", false);
-              console.log(error);
+              console.log({ Line: "Fetch Catch", error });
             })
             .finally(() => {
               $(".spinner").fadeOut();
+              $("#btnAnskeyLinkSubmit").attr("disabled", false);
               //$("#OperationStatus").html("");
             });
           //console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
