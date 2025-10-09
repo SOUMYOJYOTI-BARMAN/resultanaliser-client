@@ -613,7 +613,7 @@
           var ans_key_url = $("#inputAnskeyLink").val();
           var selectServer = isLocalhost
             ? $("#selectServer").find(":selected").val()
-            : "https://netlifyproxysb.netlify.app";
+            : "https://railwaysbproxy.vercel.app"; //"https://netlifyproxysb.netlify.app/proxy";
           ans_key_url = ans_key_url.split(".html"); // from submitting single ansswer key url
           ans_key_url = ans_key_url[0] + ".html";
           //console.log(`${selectServer}/proxy?url=${encodeURIComponent(ans_key_url)}`);
@@ -629,7 +629,7 @@
           $("#OperationStatus").html("getting data...");
 
           $(".spinner").fadeIn();
-          let FetchUrl = `${selectServer}/proxy?url=${encodeURIComponent(
+          let FetchUrl = `${selectServer}?url=${encodeURIComponent(
             ans_key_url
           )}`;
           await fetch(FetchUrl) //https://netlifyproxysb.netlify.app
@@ -651,7 +651,9 @@
               } else {
                 console.log({ Line: "Fetch Then Else", Problem: data.ressts });
                 $("#OperationStatus").html(
-                  `<pre>${data.resdata ? data.resdata : data.error}</pre>`
+                  `<pre>${
+                    data.resdata ? data.resdata : data.error.message
+                  }</pre>`
                 );
                 $("#btnAnskeyLinkSubmit").html(`Please try Again!`);
               }
